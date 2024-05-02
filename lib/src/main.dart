@@ -10,11 +10,13 @@ class CalendarView extends StatefulWidget {
       {required this.events,
       required this.view,
       required this.initialDate,
+      this.showAppBar = false,
       super.key});
 
   final List<Event> events;
   final CalendarViews view;
   final DateTime initialDate;
+  final bool showAppBar;
 
   @override
   State<CalendarView> createState() => _CalendarViewState();
@@ -33,16 +35,17 @@ class _CalendarViewState extends State<CalendarView> {
   @override
   Widget build(BuildContext context) {
     return switch (widget.view) {
-      CalendarViews.weekly => WeeklyView(controller: controller),
-      // TODO: Handle this case.
+      CalendarViews.weekly =>
+        WeeklyView(controller: controller, showAppBar: widget.showAppBar),
+      // : Handle this case.
       CalendarViews.daily => throw UnimplementedError(),
-      // TODO: Handle this case.
+      // : Handle this case.
       CalendarViews.monthly => throw UnimplementedError(),
-      // TODO: Handle this case.
+      // : Handle this case.
       CalendarViews.yearly => throw UnimplementedError(),
-      // TODO: Handle this case.
+      // : Handle this case.
       CalendarViews.agenda => throw UnimplementedError(),
-      // TODO: Handle this case.
+      // : Handle this case.
       CalendarViews.schedule => throw UnimplementedError(),
     };
   }

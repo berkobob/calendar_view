@@ -10,11 +10,14 @@ class Controller {
   DateTime initDate;
   Controller({required this.events, required this.initDate});
 
-  DateTime _dateFromPageNumber(int pageNumber) =>
+  DateTime dateFromPageNumber(int pageNumber) =>
       dateTimeFromWeekNumber(initDate.year, initDate.weekOfYear + pageNumber);
 
+  int pageNumberFromDate(DateTime date) =>
+      (initDate.difference(date).inDays / 7).floor().abs() - 1;
+
   List<DateCell> getDates(int page) {
-    final thisMonday = _dateFromPageNumber(page);
+    final thisMonday = dateFromPageNumber(page);
     return List.generate(7, (days) {
       final item = thisMonday.add(Duration(days: days));
       return DateCell(
