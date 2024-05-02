@@ -87,7 +87,7 @@ class _WeeklyViewState extends State<WeeklyView> {
         body: Column(
           children: [
             WeeklyDateRow(
-                cells: widget.controller.getDates(weekIndex),
+                cells: widget.controller.getDaysRow(weekIndex),
                 hideMonth: widget.showAppBar),
             const Divider(),
             // WeeklyMultidayEvents(
@@ -96,7 +96,7 @@ class _WeeklyViewState extends State<WeeklyView> {
                 events:
                     widget.controller.getAlldayEvents(week: 10, year: 2024)),
             // WeeklyCalendar(controller.getEvents(week: 10, year: 2024)),
-            const WeeklyCalendar(),
+            WeeklyCalendar(widget.controller.getEvents(weekIndex)),
           ],
         ),
       ),

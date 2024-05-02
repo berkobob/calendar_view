@@ -16,7 +16,7 @@ class Controller {
   int pageNumberFromDate(DateTime date) =>
       (initDate.difference(date).inDays / 7).floor().abs() - 1;
 
-  List<DateCell> getDates(int page) {
+  List<DateCell> getDaysRow(int page) {
     final thisMonday = dateFromPageNumber(page);
     return List.generate(7, (days) {
       final item = thisMonday.add(Duration(days: days));
@@ -51,5 +51,23 @@ class Controller {
     return [
       MultidayCell(date: DateTime(2024, 3, 4), days: 2, summary: 'Multiday')
     ];
+  }
+
+  List<List<Event>> getEvents(int pageNumber) {
+    final today = dateFromPageNumber(pageNumber);
+    return List.generate(
+        7,
+        (index) => events
+            .where((event) =>
+                _isSameDate(event.start, today.add(Duration(days: index))) &&
+                !event.isAllDay)
+            .toList()
+          ..sort());
+  }
+
+  bool _isSameDate(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 }

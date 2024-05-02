@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Hour extends StatelessWidget {
-  const Hour({super.key});
+class HourLabels extends StatelessWidget {
+  const HourLabels({super.key});
 
   @override
   Widget build(BuildContext context) {
