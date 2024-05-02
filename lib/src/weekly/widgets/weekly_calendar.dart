@@ -4,28 +4,86 @@ import 'package:flutter/material.dart';
 import '../../models/event.dart';
 import 'day_col.dart';
 
-class WeeklyCalendar extends StatelessWidget {
-  const WeeklyCalendar(this.events, {super.key});
+class WeeklyCalendar extends StatefulWidget {
+  const WeeklyCalendar(this.events, {required this.showTimeLine, super.key});
   final List<List<Event>> events;
+  final bool showTimeLine;
+
+  @override
+  State<WeeklyCalendar> createState() => _WeeklyCalendarState();
+}
+
+class _WeeklyCalendarState extends State<WeeklyCalendar> {
+  late final ScrollController controller;
+  double offset = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    offset = (DateTime.now().hour * 60 + DateTime.now().minute).toDouble();
+    controller =
+        ScrollController(initialScrollOffset: offset, keepScrollOffset: true);
+
+    Future.delayed(const Duration(minutes: 1), () {
+      setState(() => offset =
+          (DateTime.now().hour * 60 + DateTime.now().minute).toDouble());
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant WeeklyCalendar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    offset = (DateTime.now().hour * 60 + DateTime.now().minute).toDouble();
+    controller.animateTo(offset,
+        duration: const Duration(milliseconds: 500), curve: Curves.linear);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: SingleChildScrollView(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Expanded(flex: 1, child: HourLabels()),
-            Expanded(flex: 2, child: DayCol(events: events[0])),
-            Expanded(flex: 2, child: DayCol(events: events[1])),
-            Expanded(flex: 2, child: DayCol(events: events[2])),
-            Expanded(flex: 2, child: DayCol(events: events[3])),
-            Expanded(flex: 2, child: DayCol(events: events[4])),
-            Expanded(flex: 2, child: DayCol(events: events[5])),
-            Expanded(flex: 2, child: DayCol(events: events[6])),
-          ],
+        controller: controller,
+        child: CustomPaint(
+          painter: widget.showTimeLine ? LinePainter(offset: offset) : null,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Expanded(flex: 1, child: HourLabels()),
+              Expanded(flex: 2, child: DayCol(events: widget.events[0])),
+              Expanded(flex: 2, child: DayCol(events: widget.events[1])),
+              Expanded(flex: 2, child: DayCol(events: widget.events[2])),
+              Expanded(flex: 2, child: DayCol(events: widget.events[3])),
+              Expanded(flex: 2, child: DayCol(events: widget.events[4])),
+              Expanded(flex: 2, child: DayCol(events: widget.events[5])),
+              Expanded(flex: 2, child: DayCol(events: widget.events[6])),
+            ],
+          ),
         ),
       ),
     );
   }
+}
+
+class LinePainter extends CustomPainter {
+  final double offset;
+  LinePainter({required this.offset});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.red
+      ..strokeWidth = 1.0;
+    canvas.drawLine(
+        Offset(size.width / 15, offset), Offset(size.width, offset), paint);
+    canvas.drawCircle(Offset(size.width / 15, offset), 5.0, paint);
+  }
+
+  @override
+  bool shouldRepaint(LinePainter oldDelegate) => oldDelegate.offset != offset;
 }

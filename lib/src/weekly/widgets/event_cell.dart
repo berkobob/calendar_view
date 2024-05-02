@@ -16,6 +16,7 @@ class EventCell extends StatelessWidget {
       child: SizedBox(
         width: width,
         child: Container(
+          padding: const EdgeInsets.all(3.0),
           decoration: BoxDecoration(
             color: Colors.yellow,
             border: Border.all(color: Colors.grey[500]!),

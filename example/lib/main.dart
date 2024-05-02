@@ -40,6 +40,7 @@ void main() {
                       events: snapshot.data as List<Event>,
                       initialDate: DateTime(2024, 3, 4),
                       showAppBar: true,
+                      showTimeLine: true,
                     )
                 }),
       ),

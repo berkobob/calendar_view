@@ -8,9 +8,14 @@ import 'widgets/weekly_date_row.dart';
 
 class WeeklyView extends StatefulWidget {
   const WeeklyView(
-      {required this.controller, required this.showAppBar, super.key});
+      {required this.controller,
+      required this.showAppBar,
+      required this.showTimeLine,
+      super.key});
+
   final Controller controller;
   final bool showAppBar;
+  final bool showTimeLine;
 
   @override
   State<WeeklyView> createState() => _WeeklyViewState();
@@ -96,7 +101,8 @@ class _WeeklyViewState extends State<WeeklyView> {
                 events:
                     widget.controller.getAlldayEvents(week: 10, year: 2024)),
             // WeeklyCalendar(controller.getEvents(week: 10, year: 2024)),
-            WeeklyCalendar(widget.controller.getEvents(weekIndex)),
+            WeeklyCalendar(widget.controller.getEvents(weekIndex),
+                showTimeLine: widget.showTimeLine),
           ],
         ),
       ),
