@@ -27,34 +27,33 @@ class Controller {
     });
   }
 
-  List<List<AlldayCell>> getAlldayEvents({required int pageNumber}) {
+  List<List<AllDayCell>> getAlldayEvents({required int pageNumber}) {
     final allDay = [
-      AlldayCell(date: DateTime(2024, 3, 4), summary: 'Monday'),
-      AlldayCell(date: DateTime(2024, 3, 4), duration: 2, summary: 'Multiday'),
-      AlldayCell(date: DateTime(2024, 3, 5), duration: 4, summary: 'Multiday'),
-      AlldayCell(date: DateTime(2024, 3, 5), summary: 'Tuesday'),
-      AlldayCell(date: DateTime(2024, 3, 6), summary: 'Wednesday'),
-      AlldayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
-      AlldayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
-      AlldayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
-      AlldayCell(date: DateTime(2024, 3, 8), summary: 'Friday'),
-      AlldayCell(date: DateTime(2024, 3, 10), summary: 'Sunday'),
+      AllDayCell(date: DateTime(2024, 3, 4), summary: 'Monday'),
+      AllDayCell(date: DateTime(2024, 3, 4), duration: 2, summary: 'Multiday'),
+      AllDayCell(date: DateTime(2024, 3, 5), duration: 4, summary: 'Multiday'),
+      AllDayCell(date: DateTime(2024, 3, 5), summary: 'Tuesday'),
+      AllDayCell(date: DateTime(2024, 3, 6), summary: 'Wednesday'),
+      AllDayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
+      AllDayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
+      AllDayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
+      AllDayCell(date: DateTime(2024, 3, 8), summary: 'Friday'),
+      AllDayCell(date: DateTime(2024, 3, 10), summary: 'Sunday'),
     ];
 
-    final List<List<AlldayCell>> allDayCells = [];
-    List<AlldayCell> row = [];
+    final List<List<AllDayCell>> allDayCells = [];
+    List<AllDayCell> row = [];
     int day = 1;
-    AlldayCell event;
     while (allDay.isNotEmpty) {
-      event = allDay.firstWhere(
+      AllDayCell event = allDay.firstWhere(
         (element) => element.date.weekday == day,
         orElse: () =>
-            AlldayCell(date: DateTime.now(), summary: '', duration: 0),
+            AllDayCell(date: DateTime.now(), summary: 'TEST', duration: 0),
       );
       row.add(event);
       allDay.remove(event);
-      day = event.date.weekday + event.duration;
-      if (day > 6) {
+      day = event.duration == 0 ? day + 1 : event.date.weekday + event.duration;
+      if (day > 7) {
         allDayCells.add(row);
         row = [];
         day = 1;

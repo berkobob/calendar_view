@@ -8,12 +8,12 @@ class DateCell {
   String toString() => '$date\t$day';
 }
 
-class AlldayCell {
+class AllDayCell {
   DateTime date;
   int duration;
   String summary;
   String? calendar;
-  AlldayCell(
+  AllDayCell(
       {required this.date,
       required this.summary,
       this.duration = 1,

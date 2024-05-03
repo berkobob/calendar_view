@@ -17,6 +17,7 @@ class WeeklyCalendar extends StatefulWidget {
 
 class _WeeklyCalendarState extends State<WeeklyCalendar> {
   late final ScrollController controller;
+  late final Timer timer;
   double offset = 0.0;
 
   @override
@@ -26,7 +27,7 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
     controller =
         ScrollController(initialScrollOffset: offset, keepScrollOffset: true);
 
-    Timer.periodic(const Duration(minutes: 1), (_) {
+    timer = Timer.periodic(const Duration(minutes: 1), (_) {
       setState(() => offset =
           (DateTime.now().hour * 60 + DateTime.now().minute).toDouble());
     });
@@ -36,6 +37,7 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
   void dispose() {
     super.dispose();
     controller.dispose();
+    timer.cancel();
   }
 
   @override

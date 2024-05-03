@@ -4,7 +4,7 @@ import '../../models/cell.dart';
 
 class WeeklyAlldayEvents extends StatelessWidget {
   const WeeklyAlldayEvents({required this.events, super.key});
-  final List<List<AlldayCell>> events;
+  final List<List<AllDayCell>> events;
 
   @override
   Widget build(BuildContext context) {
