@@ -27,30 +27,42 @@ class Controller {
     });
   }
 
-  List<List<AlldayCell>> getAlldayEvents({required week, required year}) {
-    return [
-      [
-        AlldayCell(date: DateTime(2024, 3, 4), summary: 'Monday'),
-      ],
-      [
-        AlldayCell(date: DateTime(2024, 3, 5), summary: 'Tuesday'),
-      ],
-      [AlldayCell(date: DateTime(2024, 3, 6), summary: 'Wednesday')],
-      [
-        AlldayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
-        AlldayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
-        AlldayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
-      ],
-      [AlldayCell(date: DateTime(2024, 3, 8), summary: 'Friday')],
-      [],
-      [AlldayCell(date: DateTime(2024, 3, 8), summary: 'Sunday')],
+  List<List<AlldayCell>> getAlldayEvents({required int pageNumber}) {
+    final allDay = [
+      AlldayCell(date: DateTime(2024, 3, 4), summary: 'Monday'),
+      AlldayCell(date: DateTime(2024, 3, 4), duration: 2, summary: 'Multiday'),
+      AlldayCell(date: DateTime(2024, 3, 5), duration: 4, summary: 'Multiday'),
+      AlldayCell(date: DateTime(2024, 3, 5), summary: 'Tuesday'),
+      AlldayCell(date: DateTime(2024, 3, 6), summary: 'Wednesday'),
+      AlldayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
+      AlldayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
+      AlldayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
+      AlldayCell(date: DateTime(2024, 3, 8), summary: 'Friday'),
+      AlldayCell(date: DateTime(2024, 3, 10), summary: 'Sunday'),
     ];
-  }
 
-  List<MultidayCell> getMultidayEvents({required week, required year}) {
-    return [
-      MultidayCell(date: DateTime(2024, 3, 4), days: 2, summary: 'Multiday')
-    ];
+    final List<List<AlldayCell>> allDayCells = [];
+    List<AlldayCell> row = [];
+    int day = 1;
+    AlldayCell event;
+    while (allDay.isNotEmpty) {
+      event = allDay.firstWhere(
+        (element) => element.date.weekday == day,
+        orElse: () =>
+            AlldayCell(date: DateTime.now(), summary: '', duration: 0),
+      );
+      row.add(event);
+      allDay.remove(event);
+      day = event.date.weekday + event.duration;
+      if (day > 6) {
+        allDayCells.add(row);
+        row = [];
+        day = 1;
+      }
+    }
+
+    allDayCells.forEach(print);
+    return allDayCells;
   }
 
   List<List<Event>> getEvents(int pageNumber) {

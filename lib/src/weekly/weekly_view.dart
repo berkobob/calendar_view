@@ -61,6 +61,7 @@ class _WeeklyViewState extends State<WeeklyView> {
 
   @override
   Widget build(BuildContext context) {
+    widget.controller.getAlldayEvents(pageNumber: 0);
     return PageView.builder(
       controller: pageController,
       itemBuilder: (BuildContext context, int weekIndex) => Scaffold(
@@ -95,12 +96,9 @@ class _WeeklyViewState extends State<WeeklyView> {
                 cells: widget.controller.getDaysRow(weekIndex),
                 hideMonth: widget.showAppBar),
             const Divider(),
-            // WeeklyMultidayEvents(
-            //     events: controller.getMultidayEvents(week: 10, year: 2024)),
             WeeklyAlldayEvents(
                 events:
-                    widget.controller.getAlldayEvents(week: 10, year: 2024)),
-            // WeeklyCalendar(controller.getEvents(week: 10, year: 2024)),
+                    widget.controller.getAlldayEvents(pageNumber: weekIndex)),
             WeeklyCalendar(widget.controller.getEvents(weekIndex),
                 showTimeLine: widget.showTimeLine),
           ],

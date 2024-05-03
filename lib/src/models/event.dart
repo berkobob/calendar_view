@@ -19,6 +19,7 @@ class Event implements Comparable {
   String get endTimeString =>
       '${end.hour.toString().padLeft(2, '0')}:${end.minute.toString().padLeft(2, '0')}';
   double get duration => start.difference(end).inMinutes.abs().toDouble();
+  double get top => start.hour * 60.0 + start.minute;
 
   Event(
       {required this.id,

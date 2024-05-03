@@ -26,7 +26,7 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
     controller =
         ScrollController(initialScrollOffset: offset, keepScrollOffset: true);
 
-    Timer.periodic(const Duration(seconds: 1), (_) {
+    Timer.periodic(const Duration(minutes: 1), (_) {
       setState(() => offset =
           (DateTime.now().hour * 60 + DateTime.now().minute).toDouble());
     });

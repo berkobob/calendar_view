@@ -11,7 +11,7 @@ class EventCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final (width, indent) = pos;
     return Positioned(
-      top: event.start.hour * 60.0 + event.start.minute,
+      top: event.top,
       left: indent,
       child: SizedBox(
         width: width,
