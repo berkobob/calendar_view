@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:calendar_view/src/weekly/widgets/hour_labels.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +26,7 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
     controller =
         ScrollController(initialScrollOffset: offset, keepScrollOffset: true);
 
-    Future.delayed(const Duration(minutes: 1), () {
+    Timer.periodic(const Duration(seconds: 1), (_) {
       setState(() => offset =
           (DateTime.now().hour * 60 + DateTime.now().minute).toDouble());
     });
