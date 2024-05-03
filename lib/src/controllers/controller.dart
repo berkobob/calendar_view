@@ -59,8 +59,6 @@ class Controller {
         day = 1;
       }
     }
-
-    allDayCells.forEach(print);
     return allDayCells;
   }
 
