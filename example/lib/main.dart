@@ -39,7 +39,7 @@ void main() {
                       view: CalendarViews.weekly,
                       events: snapshot.data as List<Event>,
                       initialDate: DateTime(2024, 3, 4),
-                      showAppBar: true,
+                      showAppBar: false,
                       showTimeLine: true,
                     )
                 }),

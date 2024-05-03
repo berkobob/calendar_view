@@ -33,12 +33,17 @@ class Controller {
       AllDayCell(date: DateTime(2024, 3, 4), duration: 2, summary: 'Multiday'),
       AllDayCell(date: DateTime(2024, 3, 5), duration: 4, summary: 'Multiday'),
       AllDayCell(date: DateTime(2024, 3, 5), summary: 'Tuesday'),
-      AllDayCell(date: DateTime(2024, 3, 6), summary: 'Wednesday'),
+      AllDayCell(
+          date: DateTime(2024, 3, 6),
+          summary: 'Wednesday is the middle day of the week'),
       AllDayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
       AllDayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
       AllDayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
       AllDayCell(date: DateTime(2024, 3, 8), summary: 'Friday'),
-      AllDayCell(date: DateTime(2024, 3, 10), summary: 'Sunday'),
+      AllDayCell(
+          date: DateTime(2024, 3, 10),
+          summary: 'Sunday is ht elast day of the week',
+          duration: 7),
     ];
 
     final List<List<AllDayCell>> allDayCells = [];
@@ -48,11 +53,16 @@ class Controller {
       AllDayCell event = allDay.firstWhere(
         (element) => element.date.weekday == day,
         orElse: () =>
-            AllDayCell(date: DateTime.now(), summary: 'TEST', duration: 0),
+            AllDayCell(date: DateTime.now(), summary: '', duration: 0),
       );
+      day = event.duration == 0 ? day + 1 : event.date.weekday + event.duration;
+      if (day > 8) {
+        event.overflow = event.duration - (8 - event.date.weekday);
+        event.duration = 8 - event.date.weekday;
+      }
+
       row.add(event);
       allDay.remove(event);
-      day = event.duration == 0 ? day + 1 : event.date.weekday + event.duration;
       if (day > 7) {
         allDayCells.add(row);
         row = [];

@@ -13,11 +13,14 @@ class AllDayCell {
   int duration;
   String summary;
   String? calendar;
+  int? overflow;
+
   AllDayCell(
       {required this.date,
       required this.summary,
       this.duration = 1,
       this.calendar});
+
   @override
   String toString() => 'Date: $date\tDays: $duration\tSummary: $summary';
 }

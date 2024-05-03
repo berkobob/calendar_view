@@ -2,29 +2,68 @@ import 'package:flutter/material.dart';
 
 import '../../models/cell.dart';
 
-class WeeklyAlldayEvents extends StatelessWidget {
+class WeeklyAlldayEvents extends StatefulWidget {
   const WeeklyAlldayEvents({required this.events, super.key});
   final List<List<AllDayCell>> events;
 
   @override
+  State<WeeklyAlldayEvents> createState() => _WeeklyAlldayEventsState();
+}
+
+class _WeeklyAlldayEventsState extends State<WeeklyAlldayEvents> {
+  CrossFadeState _crossFadeState = CrossFadeState.showFirst;
+  @override
   Widget build(BuildContext context) {
-    return Column(
-        children: events
-            .map((e) => Row(children: [
-                  const Expanded(flex: 1, child: Text('Spare')),
-                  ...e.map((e) => e.duration == 0
-                      ? const Spacer(flex: 2)
-                      : Expanded(
-                          flex: 2 * e.duration,
-                          child: WeeklyAllDayCell(e.summary)))
-                ]))
-            .toList());
+    return AnimatedCrossFade(
+      crossFadeState: _crossFadeState,
+      secondChild: ConstrainedBox(
+        constraints: const BoxConstraints.tightForFinite(),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: IconButton(
+                  onPressed: () => setState(
+                      () => _crossFadeState = CrossFadeState.showFirst),
+                  icon: const Icon(Icons.expand_more)),
+            ),
+            ...widget.events[0].map((e) => e.duration == 0
+                ? const Spacer(flex: 2)
+                : Expanded(
+                    flex: e.duration * 2, child: WeeklyAllDayCell(e.summary)))
+          ],
+        ),
+      ),
+      firstChild: Column(
+          children: widget.events
+              .map((e) => Row(children: [
+                    widget.events.indexOf(e) == 0
+                        ? Expanded(
+                            flex: 1,
+                            child: IconButton(
+                                onPressed: () => setState(() =>
+                                    _crossFadeState =
+                                        CrossFadeState.showSecond),
+                                icon: const Icon(Icons.expand_less)))
+                        : const Spacer(),
+                    ...e.map((e) => e.duration == 0
+                        ? const Spacer(flex: 2)
+                        : Expanded(
+                            flex: 2 * e.duration,
+                            child: WeeklyAllDayCell(e.summary,
+                                overflow: e.overflow),
+                          ))
+                  ]))
+              .toList()),
+      duration: const Duration(microseconds: 250),
+    );
   }
 }
 
 class WeeklyAllDayCell extends StatelessWidget {
-  const WeeklyAllDayCell(this.summary, {super.key});
+  const WeeklyAllDayCell(this.summary, {this.overflow, super.key});
   final String summary;
+  final int? overflow;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +74,16 @@ class WeeklyAllDayCell extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.0),
           border: Border.all(),
           color: Colors.amber[200]),
-      child: Text(summary, softWrap: false, overflow: TextOverflow.fade),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+              child: Text(summary,
+                  softWrap: true, overflow: TextOverflow.fade, maxLines: 1)),
+          Text(overflow == null ? '' : '$overflow >>'),
+        ],
+      ),
     );
   }
 }
