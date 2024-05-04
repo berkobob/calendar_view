@@ -27,10 +27,11 @@ class _WeeklyAlldayEventsState extends State<WeeklyAlldayEvents> {
                       () => _crossFadeState = CrossFadeState.showFirst),
                   icon: const Icon(Icons.expand_more)),
             ),
-            ...widget.events[0].map((e) => e.duration == 0
-                ? const Spacer(flex: 2)
-                : Expanded(
-                    flex: e.duration * 2, child: WeeklyAllDayCell(e.summary)))
+            if (widget.events.isNotEmpty)
+              ...widget.events[0].map((e) => e.duration == 0
+                  ? const Spacer(flex: 2)
+                  : Expanded(
+                      flex: e.duration * 2, child: WeeklyAllDayCell(e.summary)))
           ],
         ),
       ),

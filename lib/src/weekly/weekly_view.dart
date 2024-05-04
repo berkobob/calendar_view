@@ -68,8 +68,15 @@ class _WeeklyViewState extends State<WeeklyView> {
         appBar: widget.showAppBar
             ? AppBar(
                 leading: IconButton(
-                    onPressed: () => _toPage(widget.controller
-                        .pageNumberFromDate(DateTime(2024, 4, 16))),
+                    onPressed: () => showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2101))
+                        .then((newDate) => newDate != null
+                            ? _toPage(
+                                widget.controller.pageNumberFromDate(newDate))
+                            : null),
                     icon: const Icon(Icons.calendar_month)),
                 title:
                     TitleCell(widget.controller.dateFromPageNumber(weekIndex)),
@@ -94,7 +101,9 @@ class _WeeklyViewState extends State<WeeklyView> {
           children: [
             WeeklyDateRow(
                 cells: widget.controller.getDaysRow(weekIndex),
-                hideMonth: widget.showAppBar),
+                hideMonth: widget.showAppBar,
+                callBack: (DateTime newDate) =>
+                    _toPage(widget.controller.pageNumberFromDate(newDate))),
             const Divider(),
             WeeklyAlldayEvents(
                 events:
