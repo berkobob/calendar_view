@@ -28,23 +28,15 @@ class Controller {
   }
 
   List<List<AllDayCell>> getAlldayEvents({required int pageNumber}) {
-    final allDay = [
-      AllDayCell(date: DateTime(2024, 3, 4), summary: 'Monday'),
-      AllDayCell(date: DateTime(2024, 3, 4), duration: 2, summary: 'Multiday'),
-      AllDayCell(date: DateTime(2024, 3, 5), duration: 4, summary: 'Multiday'),
-      AllDayCell(date: DateTime(2024, 3, 5), summary: 'Tuesday'),
-      AllDayCell(
-          date: DateTime(2024, 3, 6),
-          summary: 'Wednesday is the middle day of the week'),
-      AllDayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
-      AllDayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
-      AllDayCell(date: DateTime(2024, 3, 7), summary: 'Thursday'),
-      AllDayCell(date: DateTime(2024, 3, 8), summary: 'Friday'),
-      AllDayCell(
-          date: DateTime(2024, 3, 10),
-          summary: 'Sunday is ht elast day of the week',
-          duration: 7),
-    ];
+    final week = dateFromPageNumber(pageNumber).weekOfYear;
+    final allDay = events
+        .where((event) => event.isAllDay && event.start.weekOfYear == week)
+        .map(
+          (e) => AllDayCell(
+              date: e.start, summary: e.summary, duration: e.durationInDays),
+        )
+        .toList()
+      ..sort();
 
     final List<List<AllDayCell>> allDayCells = [];
     List<AllDayCell> row = [];

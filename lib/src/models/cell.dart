@@ -8,7 +8,7 @@ class DateCell {
   String toString() => '$date\t$day';
 }
 
-class AllDayCell {
+class AllDayCell implements Comparable {
   DateTime date;
   int duration;
   String summary;
@@ -23,4 +23,7 @@ class AllDayCell {
 
   @override
   String toString() => 'Date: $date\tDays: $duration\tSummary: $summary';
+
+  @override
+  int compareTo(other) => date.compareTo(other.date);
 }
