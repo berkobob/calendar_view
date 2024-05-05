@@ -29,7 +29,7 @@ class _WeeklyAlldayEventsState extends State<WeeklyAlldayEvents> {
             ),
             if (widget.events.isNotEmpty)
               ...widget.events[0].map((e) => e.duration == 0
-                  ? const Spacer(flex: 2)
+                  ? const Expanded(flex: 2, child: DragTaskTarget())
                   : Expanded(
                       flex: e.duration * 2, child: WeeklyAllDayCell(e.summary)))
           ],
@@ -48,7 +48,10 @@ class _WeeklyAlldayEventsState extends State<WeeklyAlldayEvents> {
                                 icon: const Icon(Icons.expand_less)))
                         : const Spacer(),
                     ...e.map((e) => e.duration == 0
-                        ? const Spacer(flex: 2)
+                        ? Expanded(
+                            flex: 2,
+                            child:
+                                Container(color: Colors.red, child: Text('')))
                         : Expanded(
                             flex: 2 * e.duration,
                             child: WeeklyAllDayCell(e.summary,
@@ -57,6 +60,40 @@ class _WeeklyAlldayEventsState extends State<WeeklyAlldayEvents> {
                   ]))
               .toList()),
       duration: const Duration(microseconds: 250),
+    );
+  }
+}
+
+class DragTaskTarget extends StatelessWidget {
+  const DragTaskTarget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Widget widget = Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.5),
+      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          border: Border.all(),
+          color: Colors.amber[200]),
+      child: null,
+    );
+    return DragTarget<String>(
+      onAcceptWithDetails: (task) {
+        debugPrint('*Accepted: ${task.data}!!!');
+        widget = WeeklyAllDayCell(task.data);
+      },
+      onWillAcceptWithDetails: (task) {
+        debugPrint('*Accept: ${task.data}!!');
+        widget = WeeklyAllDayCell(task.data);
+        return true;
+      },
+      onMove: (task) => widget = WeeklyAllDayCell(task.data),
+      builder: (context, a, b) {
+        debugPrint('a: $a');
+        debugPrint('b: $b');
+        return widget;
+      },
     );
   }
 }

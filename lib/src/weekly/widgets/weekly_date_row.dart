@@ -15,6 +15,7 @@ class WeeklyDateRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Border? border;
     return Row(
       children: [
         if (!hideMonth)
@@ -38,17 +39,36 @@ class WeeklyDateRow extends StatelessWidget {
         if (hideMonth) const Spacer(flex: 1),
         ...cells.map((cell) => Expanded(
               flex: 2,
-              child: Column(
-                children: [
-                  Text(cell.day, softWrap: false, overflow: TextOverflow.fade),
-                  const SizedBox(height: 6.0),
-                  Text(
-                    cell.date,
-                    softWrap: false,
-                    overflow: TextOverflow.fade,
-                    style: const TextStyle(fontSize: 20.0),
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: DragTarget<String>(
+                  onAcceptWithDetails: (data) =>
+                      debugPrint('Accepted: ${data.data}!!!'),
+                  onWillAcceptWithDetails: (data) {
+                    border = Border.all();
+                    debugPrint('Will accept: ${data.data}');
+                    return true;
+                  },
+                  onLeave: (data) => border = null,
+                  // onMove: (data) => debugPrint('Moving ${data.data}'),
+                  builder: (context, candidateData, rejectedData) => Container(
+                    decoration: BoxDecoration(border: border),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(cell.day,
+                            softWrap: false, overflow: TextOverflow.fade),
+                        const SizedBox(height: 3.0),
+                        Text(
+                          cell.date,
+                          softWrap: false,
+                          overflow: TextOverflow.fade,
+                          style: const TextStyle(fontSize: 20.0),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
             ))
       ],
