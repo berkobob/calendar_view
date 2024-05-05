@@ -93,12 +93,9 @@ class DraggableTask extends StatelessWidget {
               ),
             )),
         childWhenDragging: const ListTile(),
-        // onDragEnd: (details) =>
-        //     debugPrint('Drag ended with: ${details.wasAccepted}'),
-        // onDragCompleted: () => debugPrint('Drag completed'),
-        // // onDragUpdate: (update) => debugPrint('Drag updated with: $update'),
-        // onDraggableCanceled: (velocity, offset) => debugPrint(
-        //     'drag cancleed with velocity: $velocity and offset: $offset'),
+        onDragEnd: (DraggableDetails details) =>
+            debugPrint('Drag ended with: ${details.wasAccepted}'),
+        onDragCompleted: () => debugPrint('Drag completed of $child'),
         child: child);
   }
 }

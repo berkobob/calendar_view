@@ -99,20 +99,101 @@ class _WeeklyViewState extends State<WeeklyView> {
             : null,
         body: Column(
           children: [
-            WeeklyDateRow(
-                cells: widget.controller.getDaysRow(weekIndex),
-                hideMonth: widget.showAppBar,
-                callBack: (DateTime newDate) =>
-                    _toPage(widget.controller.pageNumberFromDate(newDate))),
-            const Divider(),
-            WeeklyAlldayEvents(
-                events:
-                    widget.controller.getAlldayEvents(pageNumber: weekIndex)),
+            Stack(
+              children: [
+                Column(
+                  children: [
+                    WeeklyDateRow(
+                        cells: widget.controller.getDaysRow(weekIndex),
+                        hideMonth: widget.showAppBar,
+                        callBack: (DateTime newDate) => _toPage(
+                            widget.controller.pageNumberFromDate(newDate))),
+                    const Divider(),
+                    WeeklyAlldayEvents(
+                        events: widget.controller
+                            .getAlldayEvents(pageNumber: weekIndex)),
+                  ],
+                ),
+                Positioned.fill(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Spacer(flex: 1),
+                      ...List.generate(
+                          7,
+                          (index) => Expanded(
+                              flex: 2,
+                              child: TaskTarget(
+                                  date: widget.controller
+                                      .dateFromPageNumber(weekIndex)
+                                  // color: Colors.red,
+                                  )))
+                    ],
+                  ),
+                )
+              ],
+            ),
             WeeklyCalendar(widget.controller.getEvents(weekIndex),
                 showTimeLine: widget.showTimeLine),
           ],
         ),
       ),
+    );
+  }
+}
+
+class TaskTarget extends StatelessWidget {
+  const TaskTarget({super.key, required this.date});
+  final DateTime date;
+
+  @override
+  Widget build(BuildContext context) {
+    BoxBorder? border;
+    return DragTarget<String>(
+      builder: (context, _, __) => Container(
+        decoration: BoxDecoration(
+            border: border, borderRadius: BorderRadius.circular(10.0)),
+      ),
+      onWillAcceptWithDetails: (task) {
+        border = Border.all(color: Theme.of(context).primaryColor);
+        return true;
+      },
+      onAcceptWithDetails: (task) {
+        border = null;
+        debugPrint('Accepted ${task.data} on $date');
+      },
+      onLeave: (data) => border = null,
+    );
+  }
+}
+
+class DragTaskTarget extends StatelessWidget {
+  const DragTaskTarget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final Widget taskTarget = Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.5),
+      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+      child: const Text('hi'),
+    );
+    Widget widget = taskTarget;
+    return DragTarget<String>(
+      onAcceptWithDetails: (task) {
+        debugPrint('*Accepted: ${task.data}!!! on ');
+      },
+      onWillAcceptWithDetails: (task) {
+        widget = Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Theme.of(context).primaryColor),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: const Text(''),
+        );
+        return true;
+      },
+      builder: (context, a, b) => widget,
+      onLeave: (data) => widget = taskTarget,
     );
   }
 }
