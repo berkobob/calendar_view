@@ -55,19 +55,14 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
         controller: controller,
         child: CustomPaint(
           painter: widget.showTimeLine ? LinePainter(offset: offset) : null,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Expanded(flex: 1, child: HourLabels()),
-              Expanded(flex: 2, child: DayCol(events: widget.events[0])),
-              Expanded(flex: 2, child: DayCol(events: widget.events[1])),
-              Expanded(flex: 2, child: DayCol(events: widget.events[2])),
-              Expanded(flex: 2, child: DayCol(events: widget.events[3])),
-              Expanded(flex: 2, child: DayCol(events: widget.events[4])),
-              Expanded(flex: 2, child: DayCol(events: widget.events[5])),
-              Expanded(flex: 2, child: DayCol(events: widget.events[6])),
-            ],
-          ),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Expanded(flex: 1, child: HourLabels()),
+            for (int day = 0; day < 7; day++)
+              Expanded(
+                flex: 2,
+                child: DayCol(day: day, events: widget.events[day]),
+              ),
+          ]),
         ),
       ),
     );
