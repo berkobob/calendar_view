@@ -1,46 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import 'consts/calendar_views.dart';
-import 'controllers/controller.dart';
+import 'controllers/events_controller.dart';
+import 'controllers/weekly_controller.dart';
 import 'models/event.dart';
 import 'weekly/weekly_view.dart';
 
-class CalendarView extends StatefulWidget {
-  const CalendarView(
-      {required this.events,
-      required this.view,
-      required this.initialDate,
-      this.showAppBar = false,
-      this.showTimeLine = true,
-      super.key});
-
-  final List<Event> events;
-  final CalendarViews view;
-  final DateTime initialDate;
-  final bool showAppBar;
-  final bool showTimeLine;
-
-  @override
-  State<CalendarView> createState() => _CalendarViewState();
-}
-
-class _CalendarViewState extends State<CalendarView> {
-  late final Controller controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller =
-        Controller(events: widget.events, initDate: widget.initialDate);
+class CalendarView extends StatelessWidget {
+  CalendarView({
+    required this.view,
+    List<Event>? events,
+    DateTime? initDate,
+    bool showAppBar = false,
+    bool showTimeLine = true,
+    super.key,
+  }) {
+    di.registerSingleton<EventsController>(
+        EventsController(events: events, initDate: initDate));
+    di.registerLazySingleton(() =>
+        WeeklyController(showAppBar: showAppBar, showTimeLine: showTimeLine));
   }
+
+  final CalendarViews view;
 
   @override
   Widget build(BuildContext context) {
-    return switch (widget.view) {
-      CalendarViews.weekly => WeeklyView(
-          controller: controller,
-          showAppBar: widget.showAppBar,
-          showTimeLine: widget.showTimeLine),
+    return switch (view) {
+      CalendarViews.weekly => const WeeklyView(),
       // : Handle this case.
       CalendarViews.daily => throw UnimplementedError(),
       // : Handle this case.
@@ -51,6 +38,8 @@ class _CalendarViewState extends State<CalendarView> {
       CalendarViews.agenda => throw UnimplementedError(),
       // : Handle this case.
       CalendarViews.schedule => throw UnimplementedError(),
+      // : Handle this case.
+      CalendarViews.fiveDays => throw UnimplementedError(),
     };
   }
 }

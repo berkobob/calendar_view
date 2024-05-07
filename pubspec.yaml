@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  watch_it: ^1.4.1
   week_of_year: ^2.2.0
 
 dev_dependencies:

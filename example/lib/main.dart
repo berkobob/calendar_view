@@ -65,9 +65,9 @@ class MainView extends StatelessWidget {
           child: CalendarView(
             view: CalendarViews.weekly,
             events: events,
-            initialDate: DateTime(2024, 3, 4),
-            showAppBar: true,
-            showTimeLine: true,
+            initDate: DateTime(2024, 3, 4),
+            // showAppBar: true,
+            // showTimeLine: true,
           ),
         ),
       ],
@@ -108,5 +108,4 @@ Future<List<Event>> loadData() async {
       .map<Event>((x) => Event.fromJson(x, calendar: 'Test Calendar'))
       .toList()
     ..sort();
-  // ..forEach(print);
 }

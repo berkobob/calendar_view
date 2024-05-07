@@ -1,42 +1,47 @@
 import 'dart:async';
 
-import 'package:calendar_view/src/weekly/widgets/hour_labels.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
+import '../../controllers/weekly_controller.dart';
 import '../../models/event.dart';
 import 'day_col.dart';
+import 'hour_labels.dart';
+import 'time_line_painter.dart';
 
 class WeeklyCalendar extends StatefulWidget {
-  const WeeklyCalendar(this.events, {required this.showTimeLine, super.key});
-  final List<List<Event>> events;
-  final bool showTimeLine;
+  const WeeklyCalendar(this.pageNumber, {super.key});
+  final int pageNumber;
 
   @override
   State<WeeklyCalendar> createState() => _WeeklyCalendarState();
 }
 
 class _WeeklyCalendarState extends State<WeeklyCalendar> {
-  late final ScrollController controller;
+  late final ScrollController scrollController;
   late final Timer timer;
   double offset = 0.0;
+  final showTimeLine = di.get<WeeklyController>().showTimeLine;
+  late final List<List<Event>> events;
 
   @override
   void initState() {
     super.initState();
     offset = (DateTime.now().hour * 60 + DateTime.now().minute).toDouble();
-    controller =
+    scrollController =
         ScrollController(initialScrollOffset: offset, keepScrollOffset: true);
 
     timer = Timer.periodic(const Duration(minutes: 1), (_) {
       setState(() => offset =
           (DateTime.now().hour * 60 + DateTime.now().minute).toDouble());
     });
+    events = di.get<WeeklyController>().getEvents(widget.pageNumber);
   }
 
   @override
   void dispose() {
     super.dispose();
-    controller.dispose();
+    scrollController.dispose();
     timer.cancel();
   }
 
@@ -44,7 +49,7 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
   void didUpdateWidget(covariant WeeklyCalendar oldWidget) {
     super.didUpdateWidget(oldWidget);
     offset = (DateTime.now().hour * 60 + DateTime.now().minute).toDouble();
-    controller.animateTo(offset,
+    scrollController.animateTo(offset,
         duration: const Duration(milliseconds: 500), curve: Curves.linear);
   }
 
@@ -52,37 +57,19 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
   Widget build(BuildContext context) {
     return Expanded(
       child: SingleChildScrollView(
-        controller: controller,
+        controller: scrollController,
         child: CustomPaint(
-          painter: widget.showTimeLine ? LinePainter(offset: offset) : null,
+          painter: showTimeLine ? TimeLinePainter(offset: offset) : null,
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const Expanded(flex: 1, child: HourLabels()),
             for (int day = 0; day < 7; day++)
               Expanded(
                 flex: 2,
-                child: DayCol(day: day, events: widget.events[day]),
+                child: DayCol(day: day, events: events[day]),
               ),
           ]),
         ),
       ),
     );
   }
-}
-
-class LinePainter extends CustomPainter {
-  final double offset;
-  LinePainter({required this.offset});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.red
-      ..strokeWidth = 1.0;
-    canvas.drawLine(
-        Offset(size.width / 15, offset), Offset(size.width, offset), paint);
-    canvas.drawCircle(Offset(size.width / 15, offset), 5.0, paint);
-  }
-
-  @override
-  bool shouldRepaint(LinePainter oldDelegate) => oldDelegate.offset != offset;
 }

@@ -7,23 +7,3 @@ class DateCell {
   @override
   String toString() => '$date\t$day';
 }
-
-class AllDayCell implements Comparable {
-  DateTime date;
-  int duration;
-  String summary;
-  String? calendar;
-  int? overflow;
-
-  AllDayCell(
-      {required this.date,
-      required this.summary,
-      this.duration = 1,
-      this.calendar});
-
-  @override
-  String toString() => 'Date: $date\tDays: $duration\tSummary: $summary';
-
-  @override
-  int compareTo(other) => date.compareTo(other.date);
-}

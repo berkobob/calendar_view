@@ -19,8 +19,6 @@ class DayCol extends StatelessWidget {
                 event.start.hour == index ||
                 event.end.hour == index ||
                 (event.start.hour < index && event.end.hour > index));
-            debugPrint(
-                'Day $day: $index:00 is ${busy.isEmpty ? '' : 'not'} free');
             return EmptyCell(day: day, hour: index, free: busy.isEmpty);
           })),
           ...drawEvents(constraints.maxWidth)

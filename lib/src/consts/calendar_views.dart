@@ -1,1 +1,9 @@
-enum CalendarViews { daily, weekly, monthly, yearly, agenda, schedule }
+enum CalendarViews {
+  daily,
+  weekly,
+  fiveDays,
+  monthly,
+  yearly,
+  agenda,
+  schedule,
+}

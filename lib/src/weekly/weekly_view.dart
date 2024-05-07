@@ -1,21 +1,11 @@
-import 'package:calendar_view/src/weekly/widgets/title_cell.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
-import '../controllers/controller.dart';
-import 'widgets/weekly_allday_events.dart';
-import 'widgets/weekly_calendar.dart';
-import 'widgets/weekly_date_row.dart';
+import '../controllers/weekly_controller.dart';
+import 'widgets/weekly_widgets.dart';
 
 class WeeklyView extends StatefulWidget {
-  const WeeklyView(
-      {required this.controller,
-      required this.showAppBar,
-      required this.showTimeLine,
-      super.key});
-
-  final Controller controller;
-  final bool showAppBar;
-  final bool showTimeLine;
+  const WeeklyView({super.key});
 
   @override
   State<WeeklyView> createState() => _WeeklyViewState();
@@ -23,6 +13,7 @@ class WeeklyView extends StatefulWidget {
 
 class _WeeklyViewState extends State<WeeklyView> {
   late PageController pageController;
+  final WeeklyController controller = di.get<WeeklyController>();
 
   @override
   void initState() {
@@ -61,11 +52,10 @@ class _WeeklyViewState extends State<WeeklyView> {
 
   @override
   Widget build(BuildContext context) {
-    widget.controller.getAlldayEvents(pageNumber: 0);
     return PageView.builder(
       controller: pageController,
-      itemBuilder: (BuildContext context, int weekIndex) => Scaffold(
-        appBar: widget.showAppBar
+      itemBuilder: (BuildContext context, int pageNumber) => Scaffold(
+        appBar: controller.showAppBar
             ? AppBar(
                 leading: IconButton(
                     onPressed: () => showDatePicker(
@@ -74,12 +64,11 @@ class _WeeklyViewState extends State<WeeklyView> {
                             firstDate: DateTime(2000),
                             lastDate: DateTime(2101))
                         .then((newDate) => newDate != null
-                            ? _toPage(
-                                widget.controller.pageNumberFromDate(newDate))
+                            ? _toPage(controller.pageNumberFromDate(newDate))
                             : null),
                     icon: const Icon(Icons.calendar_month)),
                 title:
-                    TitleCell(widget.controller.dateFromPageNumber(weekIndex)),
+                    AppBarTitleCell(controller.dateFromPageNumber(pageNumber)),
                 actions: [
                   IconButton(
                       onPressed: () => _toPage(0),
@@ -89,7 +78,7 @@ class _WeeklyViewState extends State<WeeklyView> {
                       icon: const Icon(Icons.arrow_back_ios)),
                   IconButton(
                       onPressed: () => _toPage(
-                          widget.controller.pageNumberFromDate(DateTime.now())),
+                          controller.pageNumberFromDate(DateTime.now())),
                       icon: const Icon(Icons.today)),
                   IconButton(
                       onPressed: _pageForward,
@@ -104,14 +93,13 @@ class _WeeklyViewState extends State<WeeklyView> {
                 Column(
                   children: [
                     WeeklyDateRow(
-                        cells: widget.controller.getDaysRow(weekIndex),
-                        hideMonth: widget.showAppBar,
-                        callBack: (DateTime newDate) => _toPage(
-                            widget.controller.pageNumberFromDate(newDate))),
+                        cells: controller.getDatesRow(pageNumber),
+                        hideMonth: controller.showAppBar,
+                        callBack: (DateTime newDate) =>
+                            _toPage(controller.pageNumberFromDate(newDate))),
                     const Divider(),
-                    WeeklyAlldayEvents(
-                        events: widget.controller
-                            .getAlldayEvents(pageNumber: weekIndex)),
+                    WeeklyAllDayEvents(
+                        events: controller.getAlldayEvents(pageNumber)),
                   ],
                 ),
                 Positioned.fill(
@@ -121,11 +109,12 @@ class _WeeklyViewState extends State<WeeklyView> {
                       const Spacer(flex: 1),
                       ...List.generate(
                           7,
-                          (index) => Expanded(
+                          (day) => Expanded(
                               flex: 2,
                               child: TaskTarget(
-                                  date: widget.controller
-                                      .dateFromPageNumber(weekIndex)
+                                  date: controller
+                                      .dateFromPageNumber(pageNumber)
+                                      .add(Duration(days: day))
                                   // color: Colors.red,
                                   )))
                     ],
@@ -133,8 +122,7 @@ class _WeeklyViewState extends State<WeeklyView> {
                 )
               ],
             ),
-            WeeklyCalendar(widget.controller.getEvents(weekIndex),
-                showTimeLine: widget.showTimeLine),
+            WeeklyCalendar(pageNumber),
           ],
         ),
       ),
@@ -160,40 +148,40 @@ class TaskTarget extends StatelessWidget {
       },
       onAcceptWithDetails: (task) {
         border = null;
-        debugPrint('Accepted ${task.data} on $date');
+        debugPrint('Accepted ${task.data} on $date!');
       },
       onLeave: (data) => border = null,
     );
   }
 }
 
-class DragTaskTarget extends StatelessWidget {
-  const DragTaskTarget({super.key});
+// class DragTaskTarget extends StatelessWidget {
+//   const DragTaskTarget({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    final Widget taskTarget = Container(
-      margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.5),
-      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
-      child: const Text('hi'),
-    );
-    Widget widget = taskTarget;
-    return DragTarget<String>(
-      onAcceptWithDetails: (task) {
-        debugPrint('*Accepted: ${task.data}!!! on ');
-      },
-      onWillAcceptWithDetails: (task) {
-        widget = Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Theme.of(context).primaryColor),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: const Text(''),
-        );
-        return true;
-      },
-      builder: (context, a, b) => widget,
-      onLeave: (data) => widget = taskTarget,
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     final Widget taskTarget = Container(
+//       margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.5),
+//       padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+//       child: const Text('hi'),
+//     );
+//     Widget widget = taskTarget;
+//     return DragTarget<String>(
+//       onAcceptWithDetails: (task) {
+//         debugPrint('*Accepted: ${task.data}!!! on ');
+//       },
+//       onWillAcceptWithDetails: (task) {
+//         widget = Container(
+//           decoration: BoxDecoration(
+//             border: Border.all(color: Theme.of(context).primaryColor),
+//             borderRadius: BorderRadius.circular(10.0),
+//           ),
+//           child: const Text(''),
+//         );
+//         return true;
+//       },
+//       builder: (context, a, b) => widget,
+//       onLeave: (data) => widget = taskTarget,
+//     );
+//   }
+// }

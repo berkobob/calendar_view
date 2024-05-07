@@ -1,8 +1,8 @@
 import 'package:calendar_view/src/consts/month_names.dart';
 import 'package:flutter/material.dart';
 
-class TitleCell extends StatelessWidget {
-  const TitleCell(this.start, {super.key});
+class AppBarTitleCell extends StatelessWidget {
+  const AppBarTitleCell(this.start, {super.key});
   final DateTime start;
 
   @override

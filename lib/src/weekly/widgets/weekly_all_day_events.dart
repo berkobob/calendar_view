@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '../../models/cell.dart';
+import '../../models/all_day_cell.dart';
 
-class WeeklyAlldayEvents extends StatefulWidget {
-  const WeeklyAlldayEvents({required this.events, super.key});
+class WeeklyAllDayEvents extends StatefulWidget {
+  const WeeklyAllDayEvents({required this.events, super.key});
   final List<List<AllDayCell>> events;
 
   @override
-  State<WeeklyAlldayEvents> createState() => _WeeklyAlldayEventsState();
+  State<WeeklyAllDayEvents> createState() => _WeeklyAllDayEventsState();
 }
 
-class _WeeklyAlldayEventsState extends State<WeeklyAlldayEvents> {
+class _WeeklyAllDayEventsState extends State<WeeklyAllDayEvents> {
   CrossFadeState _crossFadeState = CrossFadeState.showFirst;
   @override
   Widget build(BuildContext context) {
