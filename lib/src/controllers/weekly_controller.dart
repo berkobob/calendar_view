@@ -71,8 +71,7 @@ class WeeklyController {
     return allDayCells;
   }
 
-  List<List<Event>> getEvents(int pageNumber) {
-    final today = dateFromPageNumber(pageNumber);
+  List<List<Event>> getEvents(DateTime today) {
     return List.generate(
         7,
         (index) => events.scheduledEvents

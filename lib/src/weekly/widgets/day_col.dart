@@ -4,9 +4,9 @@ import '../../models/event.dart';
 import 'event_cell.dart';
 
 class DayCol extends StatelessWidget {
-  const DayCol({required this.events, required this.day, super.key});
+  const DayCol({required this.events, required this.date, super.key});
   final List<Event> events;
-  final int day;
+  final DateTime date;
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +14,21 @@ class DayCol extends StatelessWidget {
       builder: (context, constraints) => Stack(
         children: [
           Column(
-              children: List.generate(24, (index) {
-            final busy = events.where((event) =>
-                event.start.hour == index ||
-                event.end.hour == index ||
-                (event.start.hour < index && event.end.hour > index));
-            return EmptyCell(day: day, hour: index, free: busy.isEmpty);
+              children: List.generate(24, (hour) {
+            final start = events
+                .where((event) => event.start.hour == hour)
+                .fold<int>(
+                    0,
+                    (int start, Event event) => event.start.minute > start
+                        ? event.start.minute
+                        : start);
+
+            final end = events.where((event) => event.end.hour == hour).fold(
+                0,
+                (int end, Event event) =>
+                    event.end.minute > end ? event.end.minute : end);
+
+            return EmptyCell(date: date, hour: hour, start: start, end: end);
           })),
           ...drawEvents(constraints.maxWidth)
         ],
@@ -72,23 +81,31 @@ class DayCol extends StatelessWidget {
 
 class EmptyCell extends StatelessWidget {
   const EmptyCell(
-      {super.key, required this.day, required this.free, required this.hour});
+      {super.key,
+      required this.date,
+      required this.hour,
+      required this.start,
+      required this.end});
+
   final int hour;
-  final int day;
-  final bool free;
+  final DateTime date;
+  final int start;
+  final int end;
 
   @override
   Widget build(BuildContext context) {
     Border? border = Border.all(color: Colors.grey[200]!);
     return DragTarget<String>(
       onWillAcceptWithDetails: (_) {
-        border = free
-            ? Border.all(color: Colors.pink, width: 2.0)
-            : Border.all(color: Colors.black, width: 1.0);
-        return free;
+        border = Border.all(color: Colors.pink, width: 2.0);
+        return true;
       },
       onAcceptWithDetails: (task) {
-        debugPrint('Cell accepts ${task.data} at $hour:00 on day $day');
+        final dateTime = date.add(Duration(hours: hour));
+        final s = start == 0 ? 60 : start;
+        print('House: $hour, Start: $start, end: $end');
+        debugPrint(
+            'Cell accepts ${task.data} from ${dateTime.add(Duration(minutes: end))} to ${dateTime.add(Duration(minutes: s))}');
         border = Border.all(color: Colors.pink, width: 2.0);
       },
       onLeave: (data) => border = Border.all(color: Colors.grey[200]!),

@@ -10,8 +10,8 @@ import 'hour_labels.dart';
 import 'time_line_painter.dart';
 
 class WeeklyCalendar extends StatefulWidget {
-  const WeeklyCalendar(this.pageNumber, {super.key});
-  final int pageNumber;
+  const WeeklyCalendar(this.date, {super.key});
+  final DateTime date;
 
   @override
   State<WeeklyCalendar> createState() => _WeeklyCalendarState();
@@ -35,7 +35,7 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
       setState(() => offset =
           (DateTime.now().hour * 60 + DateTime.now().minute).toDouble());
     });
-    events = di.get<WeeklyController>().getEvents(widget.pageNumber);
+    events = di.get<WeeklyController>().getEvents(widget.date);
   }
 
   @override
@@ -65,7 +65,9 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
             for (int day = 0; day < 7; day++)
               Expanded(
                 flex: 2,
-                child: DayCol(day: day, events: events[day]),
+                child: DayCol(
+                    date: widget.date.add(Duration(days: day)),
+                    events: events[day]),
               ),
           ]),
         ),
