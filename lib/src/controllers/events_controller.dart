@@ -12,4 +12,9 @@ class EventsController {
   Iterable<Event> get allDayEvents => events.where((event) => event.isAllDay);
   Iterable<Event> get scheduledEvents =>
       events.where((event) => !event.isAllDay);
+
+  // void addEvent(
+  //     {required String task, required DateTime start, required DateTime end}) {
+  //   print('Adding $task from $start to $end');
+  // }
 }

@@ -9,15 +9,15 @@ import 'day_col.dart';
 import 'hour_labels.dart';
 import 'time_line_painter.dart';
 
-class WeeklyCalendar extends StatefulWidget {
-  const WeeklyCalendar(this.date, {super.key});
+class WeeklyScheduledEvents extends StatefulWidget {
+  const WeeklyScheduledEvents(this.date, {super.key});
   final DateTime date;
 
   @override
-  State<WeeklyCalendar> createState() => _WeeklyCalendarState();
+  State<WeeklyScheduledEvents> createState() => _WeeklyScheduledEventsState();
 }
 
-class _WeeklyCalendarState extends State<WeeklyCalendar> {
+class _WeeklyScheduledEventsState extends State<WeeklyScheduledEvents> {
   late final ScrollController scrollController;
   late final Timer timer;
   double offset = 0.0;
@@ -35,7 +35,7 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
       setState(() => offset =
           (DateTime.now().hour * 60 + DateTime.now().minute).toDouble());
     });
-    events = di.get<WeeklyController>().getEvents(widget.date);
+    di.get<WeeklyController>().loadEvents(widget.date);
   }
 
   @override
@@ -46,7 +46,7 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
   }
 
   @override
-  void didUpdateWidget(covariant WeeklyCalendar oldWidget) {
+  void didUpdateWidget(covariant WeeklyScheduledEvents oldWidget) {
     super.didUpdateWidget(oldWidget);
     offset = (DateTime.now().hour * 60 + DateTime.now().minute).toDouble();
     scrollController.animateTo(offset,
@@ -65,9 +65,7 @@ class _WeeklyCalendarState extends State<WeeklyCalendar> {
             for (int day = 0; day < 7; day++)
               Expanded(
                 flex: 2,
-                child: DayCol(
-                    date: widget.date.add(Duration(days: day)),
-                    events: events[day]),
+                child: DayCol(date: widget.date.add(Duration(days: day))),
               ),
           ]),
         ),

@@ -139,7 +139,7 @@ class _WeeklyViewState extends State<WeeklyView> {
                   )
                 ],
               ),
-              WeeklyCalendar(date),
+              WeeklyScheduledEvents(date),
             ],
           ),
         );

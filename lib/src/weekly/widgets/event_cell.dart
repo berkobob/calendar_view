@@ -30,7 +30,7 @@ class EventCell extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(event.summary),
-                if (event.duration > 15.0)
+                if (event.duration > 30.0)
                   Text('${event.startTimeString} - ${event.endTimeString}')
               ],
             ),

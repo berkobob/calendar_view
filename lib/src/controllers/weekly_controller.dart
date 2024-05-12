@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:week_of_year/date_week_extensions.dart';
 import 'package:week_of_year/datetime_from_week_number.dart';
@@ -6,18 +7,20 @@ import '../models/models.dart';
 import '../consts/constants.dart';
 import 'events_controller.dart';
 
-class WeeklyController {
+class WeeklyController with ChangeNotifier {
   final bool showAppBar;
   final bool showTimeLine;
-  final events = di.get<EventsController>();
+  final eventsController = di.get<EventsController>();
+  List<List<Event>> events = List.generate(7, (_) => <Event>[]);
 
   WeeklyController({required this.showAppBar, required this.showTimeLine});
 
   DateTime dateFromPageNumber(int pageNumber) => dateTimeFromWeekNumber(
-      events.initDate.year, events.initDate.weekOfYear + pageNumber);
+      eventsController.initDate.year,
+      eventsController.initDate.weekOfYear + pageNumber);
 
   int pageNumberFromDate(DateTime date) =>
-      (events.initDate.difference(date).inDays / 7).floor().abs() - 1;
+      (eventsController.initDate.difference(date).inDays / 7).floor().abs() - 1;
 
   List<DateCell> getDatesRow(int page) {
     final monday = dateFromPageNumber(page);
@@ -32,7 +35,7 @@ class WeeklyController {
 
   List<List<AllDayCell>> getAlldayEvents(int pageNumber) {
     final monday = dateFromPageNumber(pageNumber).weekOfYear;
-    final allDayEventsThisWeek = events.allDayEvents
+    final allDayEventsThisWeek = eventsController.allDayEvents
         .where((event) => event.start.weekOfYear == monday)
         .map(
           (e) => AllDayCell(
@@ -71,13 +74,30 @@ class WeeklyController {
     return allDayCells;
   }
 
-  List<List<Event>> getEvents(DateTime today) {
+  void loadEvents(DateTime week) => events = _getEvents(week);
+
+  List<List<Event>> _getEvents(DateTime today) {
     return List.generate(
         7,
-        (index) => events.scheduledEvents
+        (index) => eventsController.scheduledEvents
             .where((event) =>
                 event.start.isSameDate(today.add(Duration(days: index))))
             .toList()
           ..sort());
+  }
+
+  void addEvent(
+      {required String task, required DateTime start, required DateTime end}) {
+    final event = Event(
+        calendar: 'test',
+        id: '2',
+        summary: task,
+        start: start,
+        end: end,
+        isAllDay: false);
+    // eventsController.events.add(event);
+    events[start.weekday - 1].add(event);
+    notifyListeners();
+    print('Adding $task from $start to $end');
   }
 }

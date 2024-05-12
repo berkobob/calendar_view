@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
+import '../../controllers/weekly_controller.dart';
 import '../../models/event.dart';
 import 'event_cell.dart';
 
-class DayCol extends StatelessWidget {
-  const DayCol({required this.events, required this.date, super.key});
-  final List<Event> events;
+class DayCol extends StatelessWidget with WatchItMixin {
+  const DayCol({required this.date, super.key});
   final DateTime date;
 
   @override
   Widget build(BuildContext context) {
+    final events = watchPropertyValue<WeeklyController, List<Event>>(
+        (controller) => controller.events[date.weekday - 1]);
+    watchPropertyValue<WeeklyController, int>(
+        (controller) => controller.events[date.weekday - 1].length);
     return LayoutBuilder(
       builder: (context, constraints) => Stack(
         children: [
@@ -30,13 +35,14 @@ class DayCol extends StatelessWidget {
 
             return EmptyCell(date: date, hour: hour, start: start, end: end);
           })),
-          ...drawEvents(constraints.maxWidth)
+          ...drawEvents(width: constraints.maxWidth, events: events)
         ],
       ),
     );
   }
 
-  List<Widget> drawEvents(double width) {
+  List<Widget> drawEvents(
+      {required double width, required List<Event> events}) {
     List<Widget> widgets = [];
     bool overlap = false;
     bool nextdoor = false;
@@ -87,6 +93,7 @@ class EmptyCell extends StatelessWidget {
       required this.start,
       required this.end});
 
+// #TODO: this can be simplified
   final int hour;
   final DateTime date;
   final int start;
@@ -94,6 +101,7 @@ class EmptyCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = di.get<WeeklyController>();
     Border? border = Border.all(color: Colors.grey[200]!);
     return DragTarget<String>(
       onWillAcceptWithDetails: (_) {
@@ -103,9 +111,10 @@ class EmptyCell extends StatelessWidget {
       onAcceptWithDetails: (task) {
         final dateTime = date.add(Duration(hours: hour));
         final s = start == 0 ? 60 : start;
-        print('House: $hour, Start: $start, end: $end');
-        debugPrint(
-            'Cell accepts ${task.data} from ${dateTime.add(Duration(minutes: end))} to ${dateTime.add(Duration(minutes: s))}');
+        controller.addEvent(
+            task: task.data,
+            start: dateTime.add(Duration(minutes: end)),
+            end: dateTime.add(Duration(minutes: s)));
         border = Border.all(color: Colors.pink, width: 2.0);
       },
       onLeave: (data) => border = Border.all(color: Colors.grey[200]!),
