@@ -14,6 +14,7 @@ class WeeklyController with ChangeNotifier {
   List<List<Event>> events = List.generate(7, (_) => <Event>[]);
 
   WeeklyController({required this.showAppBar, required this.showTimeLine});
+  // #TODO: Make these switches and notifiers
 
   DateTime dateFromPageNumber(int pageNumber) => dateTimeFromWeekNumber(
       eventsController.initDate.year,
@@ -22,40 +23,28 @@ class WeeklyController with ChangeNotifier {
   int pageNumberFromDate(DateTime date) =>
       (eventsController.initDate.difference(date).inDays / 7).floor().abs() - 1;
 
-  List<DateCell> getDatesRow(int page) {
-    final monday = dateFromPageNumber(page);
-    return List.generate(7, (day) {
-      final today = monday.add(Duration(days: day));
-      return DateCell(
-          date: '${today.day}',
-          day: '${DaysOfWeek.values[today.weekday]}',
-          dateTime: today);
-    });
-  }
-
-  List<List<AllDayCell>> getAlldayEvents(int pageNumber) {
+  List<List<AllDayEventCell>> getAllDayEvents(int pageNumber) {
     final monday = dateFromPageNumber(pageNumber).weekOfYear;
     final allDayEventsThisWeek = eventsController.allDayEvents
         .where((event) => event.start.weekOfYear == monday)
         .map(
-          (e) => AllDayCell(
+          (e) => AllDayEventCell(
               date: e.start, summary: e.summary, duration: e.durationInDays),
         )
         .toList()
       ..sort();
 
-    final List<List<AllDayCell>> allDayCells = [];
-    List<AllDayCell> row = [];
+    final List<List<AllDayEventCell>> allDayEventCells = [];
+    List<AllDayEventCell> row = [];
     int day = 1;
     while (allDayEventsThisWeek.isNotEmpty) {
-      AllDayCell event = allDayEventsThisWeek.firstWhere(
+      AllDayEventCell event = allDayEventsThisWeek.firstWhere(
         (element) =>
             DateTime(dateFromPageNumber(pageNumber).year, element.date.month,
                     element.date.day)
                 .weekday ==
             day,
-        // (element) => element.date.weekday == day,
-        orElse: () => AllDayCell(summary: '', duration: 0),
+        orElse: () => AllDayEventCell(summary: '', duration: 0),
       );
       day = event.duration == 0 ? day + 1 : event.date.weekday + event.duration;
       if (day > 8) {
@@ -66,22 +55,20 @@ class WeeklyController with ChangeNotifier {
       row.add(event);
       allDayEventsThisWeek.remove(event);
       if (day > 7) {
-        allDayCells.add(row);
+        allDayEventCells.add(row);
         row = [];
         day = 1;
       }
     }
-    return allDayCells;
+    return allDayEventCells;
   }
 
-  void loadEvents(DateTime week) => events = _getEvents(week);
-
-  List<List<Event>> _getEvents(DateTime today) {
-    return List.generate(
+  void loadEventsForWeek(DateTime week) {
+    events = List.generate(
         7,
-        (index) => eventsController.scheduledEvents
+        (day) => eventsController.scheduledEvents
             .where((event) =>
-                event.start.isSameDate(today.add(Duration(days: index))))
+                event.start.isSameDate(week.add(Duration(days: day))))
             .toList()
           ..sort());
   }
@@ -98,6 +85,5 @@ class WeeklyController with ChangeNotifier {
     // eventsController.events.add(event);
     events[start.weekday - 1].add(event);
     notifyListeners();
-    print('Adding $task from $start to $end');
   }
 }

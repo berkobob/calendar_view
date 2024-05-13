@@ -66,7 +66,7 @@ class MainView extends StatelessWidget {
             view: CalendarViews.weekly,
             events: events,
             initDate: DateTime(2024, 3, 4),
-            // showAppBar: true,
+            showAppBar: true,
             // showTimeLine: true,
           ),
         ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../models/all_day_cell.dart';
+import '../../models/all_day_event_cell.dart';
 
 class WeeklyAllDayEvents extends StatefulWidget {
   const WeeklyAllDayEvents({required this.events, super.key});
-  final List<List<AllDayCell>> events;
+  final List<List<AllDayEventCell>> events;
 
   @override
   State<WeeklyAllDayEvents> createState() => _WeeklyAllDayEventsState();

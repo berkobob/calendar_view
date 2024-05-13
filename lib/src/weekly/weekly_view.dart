@@ -57,6 +57,7 @@ class _WeeklyViewState extends State<WeeklyView> {
       controller: pageController,
       itemBuilder: (BuildContext context, int pageNumber) {
         final date = controller.dateFromPageNumber(pageNumber);
+        controller.loadEventsForWeek(date);
         return Scaffold(
           appBar: controller.showAppBar
               ? AppBar(
@@ -95,13 +96,13 @@ class _WeeklyViewState extends State<WeeklyView> {
                   Column(
                     children: [
                       WeeklyDateRow(
-                          cells: controller.getDatesRow(pageNumber),
+                          monday: controller.dateFromPageNumber(pageNumber),
                           hideMonth: controller.showAppBar,
                           callBack: (DateTime newDate) =>
                               _toPage(controller.pageNumberFromDate(newDate))),
                       const Divider(),
                       WeeklyAllDayEvents(
-                          events: controller.getAlldayEvents(pageNumber)),
+                          events: controller.getAllDayEvents(pageNumber)),
                     ],
                   ),
                   Positioned.fill(
@@ -139,7 +140,8 @@ class _WeeklyViewState extends State<WeeklyView> {
                   )
                 ],
               ),
-              WeeklyScheduledEvents(date),
+              WeeklyScheduledEvents(date,
+                  showTimeLine: controller.showTimeLine),
             ],
           ),
         );

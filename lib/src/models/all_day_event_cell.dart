@@ -1,11 +1,11 @@
-class AllDayCell implements Comparable {
+class AllDayEventCell implements Comparable {
   DateTime date;
   int duration;
   String summary;
   String? calendar;
   int? overflow;
 
-  AllDayCell({
+  AllDayEventCell({
     required this.summary,
     date,
     this.duration = 1,

@@ -9,17 +9,21 @@ import 'weekly/weekly_view.dart';
 
 class CalendarView extends StatelessWidget {
   CalendarView({
-    required this.view,
+    this.view = CalendarViews.weekly,
     List<Event>? events,
     DateTime? initDate,
     bool showAppBar = false,
     bool showTimeLine = true,
     super.key,
   }) {
-    di.registerSingleton<EventsController>(
-        EventsController(events: events, initDate: initDate));
-    di.registerLazySingleton(() =>
-        WeeklyController(showAppBar: showAppBar, showTimeLine: showTimeLine));
+    if (!di.isRegistered<EventsController>()) {
+      di.registerSingleton<EventsController>(
+          EventsController(events: events, initDate: initDate));
+    }
+    if (!di.isRegistered<WeeklyController>()) {
+      di.registerLazySingleton(() =>
+          WeeklyController(showAppBar: showAppBar, showTimeLine: showTimeLine));
+    }
   }
 
   final CalendarViews view;
