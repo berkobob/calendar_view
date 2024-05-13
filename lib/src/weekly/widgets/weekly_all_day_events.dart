@@ -73,17 +73,26 @@ class WeeklyAllDayCell extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.5),
       padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          border: Border.all(),
+          borderRadius: BorderRadius.horizontal(
+            left: Radius.circular((overflow ?? 0) < 0 ? 0 : 10.0),
+            right: Radius.circular((overflow ?? 0) > 0 ? 0 : 10.0),
+          ),
+          border: Border(
+            top: const BorderSide(),
+            bottom: const BorderSide(),
+            left: (overflow ?? 0) < 0 ? BorderSide.none : const BorderSide(),
+            right: (overflow ?? 0) > 0 ? BorderSide.none : const BorderSide(),
+          ),
           color: Colors.amber[200]),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Text((overflow ?? 0) < 0 ? '${overflow!.abs()} << ' : ''),
           Expanded(
               child: Text(summary,
                   softWrap: true, overflow: TextOverflow.fade, maxLines: 1)),
-          Text(overflow == null ? '' : '$overflow >>'),
+          Text((overflow ?? 0) > 0 ? '>> $overflow' : ''),
         ],
       ),
     );

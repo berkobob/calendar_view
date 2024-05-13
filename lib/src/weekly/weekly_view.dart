@@ -17,7 +17,6 @@ class WeeklyView extends StatelessWidget {
       controller: controller.pageController,
       itemBuilder: (BuildContext context, int pageNumber) {
         final date = controller.dateFromPageNumber(pageNumber);
-        // controller.loadEventsForWeek(date);
 
         return Scaffold(
           appBar: controller.showAppBar ? WeeklyAppBar(date: date) : null,

@@ -18,7 +18,7 @@ class EventCell extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(3.0),
           decoration: BoxDecoration(
-            color: Colors.yellow,
+            color: Colors.amber[200],
             border: Border.all(color: Colors.grey[500]!),
             borderRadius: const BorderRadius.all(Radius.elliptical(5.0, 7.5)),
           ),

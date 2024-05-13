@@ -13,7 +13,8 @@ class AllDayEventCell implements Comparable {
   }) : date = date ?? DateTime.fromMicrosecondsSinceEpoch(0);
 
   @override
-  String toString() => 'Date: $date\tDays: $duration\tSummary: $summary';
+  String toString() =>
+      'Date: $date\tDays: $duration\tSummary: $summary\tOverflow $overflow';
 
   @override
   int compareTo(other) => date.compareTo(other.date);
