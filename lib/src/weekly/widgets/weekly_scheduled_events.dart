@@ -25,9 +25,12 @@ class _WeeklyScheduledEventsState extends State<WeeklyScheduledEvents> {
     super.initState();
     scrollController =
         ScrollController(initialScrollOffset: offset, keepScrollOffset: true);
-    timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      setState(() => scrollController
-          .jumpTo(offset - MediaQuery.of(context).size.height / 3));
+    timer = Timer.periodic(const Duration(minutes: 1), (_) {
+      setState(() => scrollController.jumpTo(offset));
+      // .jumpTo(offset - MediaQuery.of(context).size.height / 3));
+      // .animateTo(offset,
+      //     duration: const Duration(milliseconds: 100),
+      //     curve: Curves.linear));
     });
   }
 

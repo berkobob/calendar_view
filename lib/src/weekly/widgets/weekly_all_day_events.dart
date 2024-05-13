@@ -1,21 +1,24 @@
+import 'package:calendar_view/src/models/models.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
-import '../../models/all_day_event_cell.dart';
+import '../../controllers/weekly_controller.dart';
 
-class WeeklyAllDayEvents extends StatefulWidget {
-  const WeeklyAllDayEvents({required this.events, super.key});
-  final List<List<AllDayEventCell>> events;
+class WeeklyAllDayEvents extends StatelessWidget with WatchItMixin {
+  const WeeklyAllDayEvents({required this.page, super.key});
+  final int page;
 
-  @override
-  State<WeeklyAllDayEvents> createState() => _WeeklyAllDayEventsState();
-}
-
-class _WeeklyAllDayEventsState extends State<WeeklyAllDayEvents> {
-  CrossFadeState _crossFadeState = CrossFadeState.showFirst;
   @override
   Widget build(BuildContext context) {
+    final controller = di.get<WeeklyController>();
+    final events =
+        watchPropertyValue<WeeklyController, List<List<AllDayEventCell>>>(
+            (c) => c.allDayEvents);
+
+    final crossFadeState = watchPropertyValue<WeeklyController, CrossFadeState>(
+        (c) => c.showAllDayEvents);
     return AnimatedCrossFade(
-      crossFadeState: _crossFadeState,
+      crossFadeState: crossFadeState,
       secondChild: ConstrainedBox(
         constraints: const BoxConstraints.tightForFinite(),
         child: Row(
@@ -23,12 +26,11 @@ class _WeeklyAllDayEventsState extends State<WeeklyAllDayEvents> {
             Expanded(
               flex: 1,
               child: IconButton(
-                  onPressed: () => setState(
-                      () => _crossFadeState = CrossFadeState.showFirst),
+                  onPressed: () => controller.setShowAllDayEvents(true),
                   icon: const Icon(Icons.expand_more)),
             ),
-            if (widget.events.isNotEmpty)
-              ...widget.events[0].map((e) => e.duration == 0
+            if (events.isNotEmpty)
+              ...events[0].map((e) => e.duration == 0
                   ? const Spacer(flex: 2)
                   : Expanded(
                       flex: e.duration * 2, child: WeeklyAllDayCell(e.summary)))
@@ -36,15 +38,14 @@ class _WeeklyAllDayEventsState extends State<WeeklyAllDayEvents> {
         ),
       ),
       firstChild: Column(
-          children: widget.events
+          children: events
               .map((e) => Row(children: [
-                    widget.events.indexOf(e) == 0
+                    events.indexOf(e) == 0
                         ? Expanded(
                             flex: 1,
                             child: IconButton(
-                                onPressed: () => setState(() =>
-                                    _crossFadeState =
-                                        CrossFadeState.showSecond),
+                                onPressed: () =>
+                                    controller.setShowAllDayEvents(false),
                                 icon: const Icon(Icons.expand_less)))
                         : const Spacer(),
                     ...e.map((e) => e.duration == 0
@@ -56,7 +57,7 @@ class _WeeklyAllDayEventsState extends State<WeeklyAllDayEvents> {
                           ))
                   ]))
               .toList()),
-      duration: const Duration(microseconds: 250),
+      duration: const Duration(milliseconds: 250),
     );
   }
 }

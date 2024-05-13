@@ -12,8 +12,27 @@ class WeeklyController with ChangeNotifier {
   final bool showTimeLine;
   final eventsController = di.get<EventsController>();
   List<List<Event>> events = List.generate(7, (_) => <Event>[]);
+  List<List<AllDayEventCell>> allDayEvents =
+      List.generate(7, (_) => <AllDayEventCell>[]);
+  CrossFadeState showAllDayEvents = CrossFadeState.showFirst;
 
-  WeeklyController({required this.showAppBar, required this.showTimeLine});
+  void setShowAllDayEvents(bool value) {
+    showAllDayEvents =
+        value ? CrossFadeState.showFirst : CrossFadeState.showSecond;
+    notifyListeners();
+  }
+
+  final PageController pageController = PageController();
+
+  WeeklyController({required this.showAppBar, required this.showTimeLine}) {
+    pageController.addListener(() {
+      switch (pageController.page) {
+        case (double page) when (page % 1.0 == 0.0):
+          _loadEventsForWeek(page.toInt());
+      }
+    });
+    _loadEventsForWeek(0);
+  }
   // #TODO: Make these switches and notifiers
 
   DateTime dateFromPageNumber(int pageNumber) => dateTimeFromWeekNumber(
@@ -23,7 +42,7 @@ class WeeklyController with ChangeNotifier {
   int pageNumberFromDate(DateTime date) =>
       (eventsController.initDate.difference(date).inDays / 7).floor().abs() - 1;
 
-  List<List<AllDayEventCell>> getAllDayEvents(int pageNumber) {
+  List<List<AllDayEventCell>> _getAllDayEvents(int pageNumber) {
     final monday = dateFromPageNumber(pageNumber).weekOfYear;
     final allDayEventsThisWeek = eventsController.allDayEvents
         .where((event) => event.start.weekOfYear == monday)
@@ -63,7 +82,9 @@ class WeeklyController with ChangeNotifier {
     return allDayEventCells;
   }
 
-  void loadEventsForWeek(DateTime week) {
+  void _loadEventsForWeek(int page) {
+    print('loading events for week $page');
+    final week = dateFromPageNumber(page);
     events = List.generate(
         7,
         (day) => eventsController.scheduledEvents
@@ -71,9 +92,11 @@ class WeeklyController with ChangeNotifier {
                 event.start.isSameDate(week.add(Duration(days: day))))
             .toList()
           ..sort());
+    allDayEvents = _getAllDayEvents(page);
+    notifyListeners();
   }
 
-  void addEvent(
+  void addScheduledEvent(
       {required String task, required DateTime start, required DateTime end}) {
     final event = Event(
         calendar: 'test',
@@ -82,8 +105,20 @@ class WeeklyController with ChangeNotifier {
         start: start,
         end: end,
         isAllDay: false);
-    // eventsController.events.add(event);
     events[start.weekday - 1].add(event);
+    notifyListeners();
+  }
+
+  void addAllDayEvent({required String task, required DateTime start}) {
+    final event = Event(
+        summary: task,
+        start: start,
+        end: start.add(const Duration(days: 1)),
+        isAllDay: true,
+        id: '',
+        calendar: 'test');
+    eventsController.events.add(event);
+    allDayEvents = _getAllDayEvents(pageController.page!.toInt());
     notifyListeners();
   }
 }

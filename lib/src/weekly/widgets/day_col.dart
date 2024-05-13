@@ -111,7 +111,7 @@ class EmptyCell extends StatelessWidget {
       onAcceptWithDetails: (task) {
         final dateTime = date.add(Duration(hours: hour));
         final s = start == 0 ? 60 : start;
-        controller.addEvent(
+        controller.addScheduledEvent(
             task: task.data,
             start: dateTime.add(Duration(minutes: end)),
             end: dateTime.add(Duration(minutes: s)));

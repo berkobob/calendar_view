@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
 import '../../consts/constants.dart';
+import '../../controllers/weekly_controller.dart';
 
 class WeeklyDateRow extends StatelessWidget {
-  const WeeklyDateRow(
-      {required this.monday,
-      required this.hideMonth,
-      required this.callBack,
-      super.key});
-  final DateTime monday;
-  final bool hideMonth;
-  final Function callBack;
+  const WeeklyDateRow({required this.page, super.key});
+  final int page;
 
   @override
   Widget build(BuildContext context) {
+    final controller = di.get<WeeklyController>();
+    final monday = controller.dateFromPageNumber(page);
     final sunday = monday.add(const Duration(days: 6));
+    final showMonth = !controller.showAppBar;
     Border? border;
+
     return Row(children: [
-      if (!hideMonth)
+      if (showMonth)
         Expanded(
             flex: 1,
             child: TextButton(
@@ -26,8 +26,12 @@ class WeeklyDateRow extends StatelessWidget {
                       initialDate: DateTime.now(),
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2101))
-                  .then(
-                      (newDate) => newDate != null ? callBack(newDate) : null),
+                  .then((newDate) => newDate != null
+                      ? controller.pageController.animateToPage(
+                          controller.pageNumberFromDate(newDate),
+                          duration: const Duration(seconds: 2),
+                          curve: Curves.fastOutSlowIn)
+                      : null),
               child: Column(children: [
                 Text('${MonthNames.values[monday.month]}'),
                 if (monday.month != sunday.month)
@@ -35,7 +39,7 @@ class WeeklyDateRow extends StatelessWidget {
                 Text(monday.year.toString())
               ]),
             )),
-      if (hideMonth) const Spacer(flex: 1),
+      if (!showMonth) const Spacer(flex: 1),
       ...List.generate(7, (day) => monday.add(Duration(days: day)))
           .map((today) => Expanded(
                 flex: 2,
