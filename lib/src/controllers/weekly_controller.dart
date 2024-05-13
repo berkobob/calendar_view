@@ -56,6 +56,7 @@ class WeeklyController with ChangeNotifier {
     final List<List<AllDayEventCell>> allDayEventCells = [];
     List<AllDayEventCell> row = [];
     int day = 1;
+
     while (allDayEventsThisWeek.isNotEmpty) {
       AllDayEventCell event = allDayEventsThisWeek.firstWhere(
         (element) =>
@@ -82,8 +83,11 @@ class WeeklyController with ChangeNotifier {
     return allDayEventCells;
   }
 
+// #TODO Find all day events that start before this week
+// #TODODrag to extend task time
+// #TODO Drag all day events to a scheduled time
+
   void _loadEventsForWeek(int page) {
-    print('loading events for week $page');
     final week = dateFromPageNumber(page);
     events = List.generate(
         7,

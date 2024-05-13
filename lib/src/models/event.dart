@@ -5,10 +5,10 @@ class Event implements Comparable {
   final String summary;
   final String? description;
   final bool isAllDay;
-  final DateTime start;
+  DateTime start;
   final String? location;
   String? colorId;
-  final DateTime end;
+  DateTime end;
   final String calendar;
 
   int get week => start.weekOfYear;
@@ -42,7 +42,21 @@ class Event implements Comparable {
             DateTime.parse(json['start']['date'] ?? json['start']['dateTime']),
         location = json['location'],
         colorId = json['colorId'],
-        end = DateTime.parse(json['end']['date'] ?? json['end']['dateTime']);
+        end = DateTime.parse(json['end']['date'] ?? json['end']['dateTime']) {
+    if (json['recurrence'] case var rules? when rules is List) {
+      final frequency = rules
+          .firstWhere((x) => x.contains('RRULE'))
+          .split(':')[1]
+          .split(';')
+          .firstWhere((String x) => x.contains('FREQ'))
+          .split('=')[1];
+
+      if (frequency == 'YEARLY') {
+        start = DateTime(DateTime.now().year, start.month, start.day);
+        if (isAllDay) end = start.add(const Duration(days: 1));
+      }
+    }
+  }
 
   @override
   String toString() =>
