@@ -59,7 +59,8 @@ class DayCol extends StatelessWidget with WatchItMixin {
           widgets.add(EventCell(event: event, pos: (width, 0.0)));
         }
 
-        if (event.end.compareTo(next.start) > 0) {
+        if (event.end.compareTo(next.start) > 0 &&
+            event.start.compareTo(next.start) < 0) {
           overlap = true;
         } else {
           overlap = false;
@@ -121,7 +122,9 @@ class EmptyCell extends StatelessWidget {
       builder: (context, _, __) => Container(
         height: 60.0,
         decoration: BoxDecoration(
-            border: border, borderRadius: BorderRadius.circular(10.0)),
+          border: border,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
       ),
     );
   }

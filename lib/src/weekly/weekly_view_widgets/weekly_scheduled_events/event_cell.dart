@@ -13,11 +13,21 @@ class EventCell extends StatefulWidget {
 
 class _EventCellState extends State<EventCell> {
   late double duration;
+  late String summary;
 
   @override
   void initState() {
     duration = widget.event.duration;
+    summary = widget.event.summary;
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant EventCell oldWidget) {
+    print('${oldWidget.event.summary} BECOMING ${widget.event.summary}');
+    duration = widget.event.duration;
+    summary = widget.event.summary;
+    super.didUpdateWidget(oldWidget);
   }
 
 // #TODO: Drag all day event to another day

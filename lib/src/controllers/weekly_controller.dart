@@ -127,6 +127,7 @@ class WeeklyController with ChangeNotifier {
         end: end,
         isAllDay: false);
     events[start.weekday - 1].add(event);
+    // events[start.weekday - 1].sort();
     notifyListeners();
   }
 
