@@ -12,14 +12,17 @@ class WeeklyController with ChangeNotifier {
   final bool showTimeLine;
   final eventsController = di.get<EventsController>();
   List<List<Event>> events = List.generate(7, (_) => <Event>[]);
-  List<List<AllDayEventCell>> allDayEvents =
-      List.generate(7, (_) => <AllDayEventCell>[]);
-  CrossFadeState showAllDayEvents = CrossFadeState.showFirst;
+  AllDayEvents allDayEvents = List.generate(7, (_) => <AllDayEventCell>[]);
+
+  ValueNotifier<CrossFadeState> showAllDayEvents =
+      ValueNotifier(CrossFadeState.showFirst);
+
+  ValueNotifier<DateTime> monday =
+      ValueNotifier(di.get<EventsController>().initDate);
 
   void setShowAllDayEvents(bool value) {
-    showAllDayEvents =
+    showAllDayEvents.value =
         value ? CrossFadeState.showFirst : CrossFadeState.showSecond;
-    notifyListeners();
   }
 
   final PageController pageController = PageController();
@@ -29,6 +32,7 @@ class WeeklyController with ChangeNotifier {
       switch (pageController.page) {
         case (double page) when (page % 1.0 == 0.0):
           _loadEventsForWeek(page.toInt());
+          monday.value = dateFromPageNumber(page.toInt());
       }
     });
     _loadEventsForWeek(0);
@@ -42,7 +46,7 @@ class WeeklyController with ChangeNotifier {
   int pageNumberFromDate(DateTime date) =>
       (eventsController.initDate.difference(date).inDays / 7).floor().abs() - 1;
 
-  List<List<AllDayEventCell>> _getAllDayEvents(int pageNumber) {
+  AllDayEvents _getAllDayEvents(int pageNumber) {
     final monday = dateFromPageNumber(pageNumber);
     final allDayEventsThisWeek = eventsController.allDayEvents
         .where((event) =>
@@ -55,7 +59,7 @@ class WeeklyController with ChangeNotifier {
         .toList()
       ..sort();
 
-    final List<List<AllDayEventCell>> allDayEventCells = [];
+    final AllDayEvents allDayEventCells = [];
     List<AllDayEventCell> row = [];
     int day = 1;
 

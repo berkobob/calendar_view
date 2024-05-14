@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../controllers/weekly_controller.dart';
-import '../../models/event.dart';
+import '../../../controllers/weekly_controller.dart';
+import '../../../models/event.dart';
 import 'event_cell.dart';
 
 class DayCol extends StatelessWidget with WatchItMixin {

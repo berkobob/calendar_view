@@ -1,22 +1,22 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
+import '../../../controllers/weekly_controller.dart';
 import 'day_col.dart';
 import 'hour_labels.dart';
 import 'time_line_painter.dart';
 
 class WeeklyScheduledEvents extends StatefulWidget {
-  const WeeklyScheduledEvents(this.date,
-      {required this.showTimeLine, super.key});
-  final DateTime date;
-  final bool showTimeLine;
+  const WeeklyScheduledEvents({super.key});
 
   @override
   State<WeeklyScheduledEvents> createState() => _WeeklyScheduledEventsState();
 }
 
 class _WeeklyScheduledEventsState extends State<WeeklyScheduledEvents> {
+  final wc = di.get<WeeklyController>();
   late final ScrollController scrollController;
   late final Timer timer;
 
@@ -56,13 +56,13 @@ class _WeeklyScheduledEventsState extends State<WeeklyScheduledEvents> {
       child: SingleChildScrollView(
         controller: scrollController,
         child: CustomPaint(
-          painter: widget.showTimeLine ? TimeLinePainter(offset: offset) : null,
+          painter: wc.showTimeLine ? TimeLinePainter(offset: offset) : null,
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const Expanded(flex: 1, child: HourLabels()),
             for (int day = 0; day < 7; day++)
               Expanded(
                 flex: 2,
-                child: DayCol(date: widget.date.add(Duration(days: day))),
+                child: DayCol(date: wc.monday.value.add(Duration(days: day))),
               ),
           ]),
         ),

@@ -5,15 +5,14 @@ import '../../consts/constants.dart';
 import '../../controllers/weekly_controller.dart';
 
 class WeeklyDateRow extends StatelessWidget {
-  const WeeklyDateRow({required this.page, super.key});
-  final int page;
+  const WeeklyDateRow({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = di.get<WeeklyController>();
-    final monday = controller.dateFromPageNumber(page);
+    final wc = di.get<WeeklyController>();
+    final monday = wc.monday.value;
     final sunday = monday.add(const Duration(days: 6));
-    final showMonth = !controller.showAppBar;
+    final showMonth = !wc.showAppBar;
     Border? border;
 
     return Row(children: [
@@ -27,8 +26,8 @@ class WeeklyDateRow extends StatelessWidget {
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2101))
                   .then((newDate) => newDate != null
-                      ? controller.pageController.animateToPage(
-                          controller.pageNumberFromDate(newDate),
+                      ? wc.pageController.animateToPage(
+                          wc.pageNumberFromDate(newDate),
                           duration: const Duration(seconds: 2),
                           curve: Curves.fastOutSlowIn)
                       : null),
