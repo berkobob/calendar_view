@@ -4,6 +4,7 @@ class AllDayEventCell implements Comparable {
   String summary;
   String? calendar;
   int? overflow;
+  int? underflow;
 
   AllDayEventCell({
     required this.summary,
@@ -14,7 +15,7 @@ class AllDayEventCell implements Comparable {
 
   @override
   String toString() =>
-      'Date: $date\tDays: $duration\tSummary: $summary\tOverflow $overflow';
+      'Date: $date\tDays: $duration\tSummary: $summary\tOverflow $overflow\tUnderflow $underflow';
 
   @override
   int compareTo(other) => date.compareTo(other.date);

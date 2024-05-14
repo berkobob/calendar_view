@@ -68,8 +68,8 @@ class WeeklyController with ChangeNotifier {
       );
 
       if (event.date.weekOfYear < monday.weekOfYear && event.summary != '') {
-        event.overflow = 0 - monday.difference(event.date).inDays.abs();
-        event.duration += event.overflow!;
+        event.underflow = monday.difference(event.date).inDays.abs();
+        event.duration -= event.underflow!;
         event.date = monday;
       }
 
@@ -86,6 +86,12 @@ class WeeklyController with ChangeNotifier {
         row = [];
         day = 1;
       }
+    }
+    if (row.isNotEmpty) {
+      for (int i = day; i <= 7; i++) {
+        row.add(AllDayEventCell(summary: '', duration: 0));
+      }
+      allDayEventCells.add(row);
     }
     return allDayEventCells;
   }

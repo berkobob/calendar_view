@@ -53,7 +53,7 @@ class WeeklyAllDayEvents extends StatelessWidget with WatchItMixin {
                         : Expanded(
                             flex: 2 * e.duration,
                             child: WeeklyAllDayCell(e.summary,
-                                overflow: e.overflow),
+                                overflow: e.overflow, underflow: e.underflow),
                           ))
                   ]))
               .toList()),
@@ -63,24 +63,26 @@ class WeeklyAllDayEvents extends StatelessWidget with WatchItMixin {
 }
 
 class WeeklyAllDayCell extends StatelessWidget {
-  const WeeklyAllDayCell(this.summary, {this.overflow, super.key});
+  const WeeklyAllDayCell(this.summary,
+      {this.overflow, this.underflow, super.key});
   final String summary;
   final int? overflow;
+  final int? underflow;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.5),
-      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 1.0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.horizontal(
-            left: Radius.circular((overflow ?? 0) < 0 ? 0 : 10.0),
+            left: Radius.circular((underflow ?? 0) > 0 ? 0 : 10.0),
             right: Radius.circular((overflow ?? 0) > 0 ? 0 : 10.0),
           ),
           border: Border(
             top: const BorderSide(),
             bottom: const BorderSide(),
-            left: (overflow ?? 0) < 0 ? BorderSide.none : const BorderSide(),
+            left: (underflow ?? 0) > 0 ? BorderSide.none : const BorderSide(),
             right: (overflow ?? 0) > 0 ? BorderSide.none : const BorderSide(),
           ),
           color: Colors.amber[200]),
@@ -88,7 +90,7 @@ class WeeklyAllDayCell extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text((overflow ?? 0) < 0 ? '${overflow!.abs()} << ' : ''),
+          Text((underflow ?? 0) > 0 ? '$underflow << ' : ''),
           Expanded(
               child: Text(summary,
                   softWrap: true, overflow: TextOverflow.fade, maxLines: 1)),
