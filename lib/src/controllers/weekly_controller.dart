@@ -71,7 +71,6 @@ class WeeklyController with ChangeNotifier {
         event.overflow = 0 - monday.difference(event.date).inDays.abs();
         event.duration += event.overflow!;
         event.date = monday;
-        print(event);
       }
 
       day = event.duration == 0 ? day + 1 : event.date.weekday + event.duration;
@@ -91,8 +90,7 @@ class WeeklyController with ChangeNotifier {
     return allDayEventCells;
   }
 
-// #TODO Find all day events that start before this week
-// #TODODrag to extend task time
+// #TODO Drag to extend task time
 // #TODO Drag all day events to a scheduled time
 
   void _loadEventsForWeek(int page) {
