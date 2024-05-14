@@ -1,20 +1,31 @@
 import 'package:calendar_view/src/models/event.dart';
 import 'package:flutter/material.dart';
 
-class EventCell extends StatelessWidget {
+class EventCell extends StatefulWidget {
   const EventCell({super.key, required this.event, required this.pos});
 
   final Event event;
   final (double width, double indent) pos;
 
-// #TODO: Drag all day event to another day
-// #TODO: Drag all day event to a scheduled time
+  @override
+  State<EventCell> createState() => _EventCellState();
+}
+
+class _EventCellState extends State<EventCell> {
+  late double duration;
 
   @override
+  void initState() {
+    duration = widget.event.duration;
+    super.initState();
+  }
+
+// #TODO: Drag all day event to another day
+  @override
   Widget build(BuildContext context) {
-    final (width, indent) = pos;
+    final (width, indent) = widget.pos;
     return Positioned(
-      top: event.top,
+      top: widget.event.top,
       left: indent,
       child: Column(
         children: [
@@ -25,27 +36,31 @@ class EventCell extends StatelessWidget {
               // onEnter: (event) => print('${event.down}'),
               child: SizedBox(
                 width: width,
-                height: event.duration,
+                height: duration,
                 child: Container(
-                  padding: const EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 0.0),
+                  padding: const EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
                   decoration: BoxDecoration(
                     color: Colors.amber[200],
                     border: Border.all(color: Colors.grey[500]!),
                     borderRadius:
                         const BorderRadius.all(Radius.elliptical(5.0, 7.5)),
                   ),
-                  child: EventCellText(event.summary,
-                      '${event.startTimeString} - ${event.endTimeString}',
-                      duration: event.duration),
+                  child: EventCellText(widget.event.summary,
+                      '${widget.event.startTimeString} - ${widget.event.endTimeString}',
+                      duration: widget.event.duration),
                 ),
               ),
             ),
           ),
           Draggable(
-              data: event,
+              data: widget.event,
               axis: Axis.vertical,
               feedback: Container(height: 0.5, width: width, color: Colors.red),
               // onDragStarted: () => print('onDragStarted'),
+              onDragUpdate: (details) => setState(() {
+                    print(details.delta.dy);
+                    duration += details.delta.dy;
+                  }),
               child: MouseRegion(
                 cursor: SystemMouseCursors.resizeUpDown,
                 // onEnter: (details) => print('onEnter: $details'),

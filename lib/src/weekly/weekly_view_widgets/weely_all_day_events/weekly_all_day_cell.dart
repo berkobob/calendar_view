@@ -12,7 +12,7 @@ class WeeklyAllDayCell extends StatelessWidget {
         cursor: SystemMouseCursors.grab,
         child: Draggable<String>(
           data: allDayEvent.summary,
-          onDragStarted: () => print('onDragStarted'),
+          // onDragStarted: () => print('onDragStarted'),
           // onDragUpdate: print,
           feedback: SizedBox(
               width: constraints.maxWidth,

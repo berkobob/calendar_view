@@ -10,6 +10,7 @@ import 'events_controller.dart';
 class WeeklyController with ChangeNotifier {
   final bool showAppBar;
   final bool showTimeLine;
+
   final eventsController = di.get<EventsController>();
   List<List<Event>> events = List.generate(7, (_) => <Event>[]);
   AllDayEvents allDayEvents = List.generate(7, (_) => <AllDayEventCell>[]);
