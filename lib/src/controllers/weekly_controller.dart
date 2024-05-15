@@ -35,13 +35,14 @@ class WeeklyController with ChangeNotifier {
     pageController.addListener(() {
       switch (pageController.page) {
         case (double page) when (page % 1.0 == 0.0):
-          _loadEventsForWeek(page.toInt());
+          _loadEventsForWeek();
           monday.value = dateFromPageNumber(page.toInt());
       }
     });
-    _loadEventsForWeek(0);
+    _loadEventsForWeek();
   }
   // #TODO: Make these switches and notifiers
+  // #TODO: Make autoscrolling an option
 
   DateTime dateFromPageNumber(int pageNumber) => dateTimeFromWeekNumber(
       eventsController.initDate.year,
@@ -50,12 +51,11 @@ class WeeklyController with ChangeNotifier {
   int pageNumberFromDate(DateTime date) =>
       (eventsController.initDate.difference(date).inDays / 7).floor().abs() - 1;
 
-  void _getAllDayEvents(int pageNumber) {
-    final monday = dateFromPageNumber(pageNumber);
+  void _getAllDayEvents() {
     final allDayEventsThisWeek = eventsController.allDayEvents
         .where((event) =>
-            event.start.isBefore(monday.add(const Duration(days: 7))) &&
-            event.end.isAfter(monday))
+            event.start.isBefore(monday.value.add(const Duration(days: 7))) &&
+            event.end.isAfter(monday.value))
         .map((event) => AllDayEvent(event))
         .toList()
       ..sort();
@@ -68,14 +68,14 @@ class WeeklyController with ChangeNotifier {
       AllDayEvent event = allDayEventsThisWeek.firstWhere(
         (event) =>
             event.start.weekday == day ||
-            (event.start.weekOfYear < monday.weekOfYear),
+            (event.start.weekOfYear < monday.value.weekOfYear),
         orElse: () => AllDayEvent(),
       );
 
       if (event.event != null &&
-          event.start.weekOfYear < monday.weekOfYear &&
+          event.start.weekOfYear < monday.value.weekOfYear &&
           event.summary != '') {
-        event.underflow = monday.difference(event.start).inDays.abs();
+        event.underflow = monday.value.difference(event.start).inDays.abs();
         event.duration -= event.underflow;
         event.start = monday;
       }
@@ -107,35 +107,37 @@ class WeeklyController with ChangeNotifier {
   // #TODO: Move scheduled events to all day events
   // #TODO: look at checkboxes for tasks
 
-  void _loadEventsForWeek(int page) {
-    final week = dateFromPageNumber(page);
+  void _getScheduledEventsk() {
     scheduledEvents = List.generate(
         7,
         (day) => eventsController.scheduledEvents
             .where((event) =>
-                event.start.isSameDate(week.add(Duration(days: day))))
+                event.start.isSameDate(monday.value.add(Duration(days: day))))
             .map((event) => ScheduledEvent(event))
             .toList()
           ..sort());
-    _getAllDayEvents(page);
     notifyListeners();
   }
 
-  void addScheduledEvent({Event? was, required Event isNow}) {
+  void _loadEventsForWeek() {
+    _getScheduledEventsk();
+    _getAllDayEvents();
+    notifyListeners();
+  }
+
+  void addEvent({Event? was, required Event newEvent}) {
     if (was != null) {
       eventsController.events.remove(was);
-      scheduledEvents[was.start.weekday - 1].removeWhere((e) => e.event == was);
+      was.isAllDay
+          ? _getAllDayEvents()
+          : scheduledEvents[was.start.weekday - 1]
+              .removeWhere((e) => e.event == was);
     }
 
-    eventsController.events.add(isNow);
-    scheduledEvents[isNow.start.weekday - 1].add(ScheduledEvent(isNow));
-    // events[start.weekday - 1].sort();
-    notifyListeners();
-  }
+    eventsController.events.add(newEvent);
 
-  void addAllDayEvent({required Event event}) {
-    eventsController.events.add(event);
-    _getAllDayEvents(pageController.page!.toInt());
+    newEvent.isAllDay ? _getAllDayEvents() : _getScheduledEventsk();
+
     notifyListeners();
   }
 }

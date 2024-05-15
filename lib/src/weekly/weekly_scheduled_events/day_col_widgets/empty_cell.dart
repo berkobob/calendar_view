@@ -22,7 +22,13 @@ class EmptyCell extends StatelessWidget {
     final wc = di.get<WeeklyController>();
     Border? border = Border.all(color: Colors.grey[200]!);
     return DragTarget<Task>(
-      onWillAcceptWithDetails: (_) {
+      onWillAcceptWithDetails: (task) {
+        if (task.data case Event event) {
+          if (event.isAllDay &&
+              event.end.difference(event.start).inDays.abs() > 1) {
+            return false;
+          }
+        }
         border = Border.all(color: Colors.pink, width: 2.0);
         return true;
       },
@@ -30,7 +36,7 @@ class EmptyCell extends StatelessWidget {
         Event? was = task.data is Event ? task.data as Event : null;
         final dateTime = date.add(Duration(hours: hour));
         final duration = was != null && !was.isAllDay
-            ? was.end.difference((task.data as Event).start).inMinutes.abs()
+            ? was.end.difference(was.start).inMinutes.abs()
             : start == 0
                 ? 60
                 : start;
@@ -39,10 +45,10 @@ class EmptyCell extends StatelessWidget {
             was != null ? was.toMap : {'summary': task.data.summary};
 
         json['start'] = dateTime.add(Duration(minutes: end));
-        json['end'] = dateTime.add(Duration(minutes: duration));
+        json['end'] = json['start'].add(Duration(minutes: duration));
         json['isAllDay'] = false;
         json['calendar'] = 'Default calendar';
-        wc.addScheduledEvent(was: was, isNow: Event.fromMap(json));
+        wc.addEvent(was: was, newEvent: Event.fromMap(json));
         border = Border.all(color: Colors.pink, width: 2.0);
       },
       onLeave: (data) => border = Border.all(color: Colors.grey[200]!),

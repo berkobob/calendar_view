@@ -3,7 +3,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:week_of_year/date_week_extensions.dart';
 
 import '../../controllers/weekly_controller.dart';
-import '../../models/event.dart';
+import '../../models/models.dart';
 
 class WeeklyAllDayDropTarget extends StatelessWidget {
   const WeeklyAllDayDropTarget({super.key});
@@ -19,8 +19,7 @@ class WeeklyAllDayDropTarget extends StatelessWidget {
         7,
         (day) => Expanded(
           flex: 2,
-          child: DragTarget<Object>(
-              // #TODO: Don't accept task from this date
+          child: DragTarget<Task>(
               builder: (context, _, __) {
                 return Container(
                   decoration: BoxDecoration(
@@ -33,31 +32,25 @@ class WeeklyAllDayDropTarget extends StatelessWidget {
               onWillAcceptWithDetails: (task) {
                 if (task.data is Event) {
                   final event = task.data as Event;
-                  if (event.isAllDay && event.start.weekOfYear == day) {
+                  if (event.isAllDay && event.start.weekday - 1 == day) {
                     return false;
                   }
                 }
-                if (task.data is Event || task.data is String) {
-                  border[day] =
-                      Border.all(color: Theme.of(context).primaryColor);
-                  return true;
-                }
-                return false;
+                border[day] = Border.all(color: Theme.of(context).primaryColor);
+                return true;
               },
               onAcceptWithDetails: (task) {
-                final event = task.data is Event
-                    ? task.data as Event
-                    : Event(
-                        summary: task.data as String,
-                        start: wc.monday.value.add(Duration(days: day)),
-                        end: wc.monday.value.add(Duration(days: day + 1)),
-                        isAllDay: true,
-                      );
+                Event? was = task.data is Event ? task.data as Event : null;
+
+                Map<String, dynamic> json =
+                    was != null ? was.toMap : {'summary': task.data.summary};
+
+                json['start'] = wc.monday.value.add(Duration(days: day));
+                json['end'] = wc.monday.value.add(Duration(days: day + 1));
+                json['isAllDay'] = true;
+                json['calendar'] = 'Default calendar';
+                wc.addEvent(was: was, newEvent: Event.fromMap(json));
                 border[day] = null;
-                event.start = wc.monday.value.add(Duration(days: day));
-                event.end = wc.monday.value.add(Duration(days: day + 1));
-                event.isAllDay = true;
-                wc.addAllDayEvent(event: event);
               }),
         ),
       )

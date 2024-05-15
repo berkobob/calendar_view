@@ -20,18 +20,16 @@ class _WeeklyScheduledEventsState extends State<WeeklyScheduledEvents> {
   final ScrollController scrollController = ScrollController();
   late final Timer timer;
 
+  int x = 0;
   @override
   void initState() {
-    late final double offset;
     super.initState();
-
     timer = Timer.periodic(const Duration(minutes: 1), (_) {
-      setState(() => scrollController.jumpTo(time + offset));
+      setState(() => scrollController.jumpTo(time - 180.0));
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      offset = 0 - MediaQuery.of(context).size.height / 5;
-      scrollController.jumpTo(time + offset);
+      scrollController.jumpTo(time - 180.0);
     });
   }
 
