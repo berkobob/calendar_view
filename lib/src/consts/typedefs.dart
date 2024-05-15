@@ -1,3 +1,3 @@
 import '../models/models.dart';
 
-typedef AllDayEvents = List<List<AllDayEventCell>>;
+typedef AllDayEvents = List<List<AllDayEvent>>;

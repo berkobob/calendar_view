@@ -1,5 +1,3 @@
-import 'package:week_of_year/date_week_extensions.dart';
-
 class Event implements Comparable {
   final String id;
   final String summary;
@@ -10,17 +8,6 @@ class Event implements Comparable {
   String? colorId;
   DateTime end;
   final String calendar;
-
-  int get weekNumber => start.weekOfYear;
-  int get year => start.year;
-
-  String get startTimeString =>
-      '${start.hour.toString().padLeft(2, '0')}:${start.minute.toString().padLeft(2, '0')}';
-  String get endTimeString =>
-      '${end.hour.toString().padLeft(2, '0')}:${end.minute.toString().padLeft(2, '0')}';
-  double get duration => start.difference(end).inMinutes.abs().toDouble();
-  double get top => start.hour * 60.0 + start.minute;
-  int get durationInDays => end.difference(start).inDays.abs();
 
   Event(
       {required this.id,
@@ -58,9 +45,9 @@ class Event implements Comparable {
     }
   }
 
-  @override
-  String toString() =>
-      '$year:$weekNumber - $summary on $start till $end and ${isAllDay ? "is all day" : "is not all day"}';
+  // @override
+  // String toString() =>
+  //     '$year:$weekNumber - $summary on $start till $end and ${isAllDay ? "is all day" : "is not all day"}';
 
   @override
   int compareTo(other) => start.compareTo(other.start);

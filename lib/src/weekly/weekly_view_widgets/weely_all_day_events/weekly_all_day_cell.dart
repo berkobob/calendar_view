@@ -1,9 +1,9 @@
-import 'package:calendar_view/src/models/all_day_event_cell.dart';
+import 'package:calendar_view/src/models/all_day_event.dart';
 import 'package:flutter/material.dart';
 
 class WeeklyAllDayCell extends StatelessWidget {
   const WeeklyAllDayCell(this.allDayEvent, {super.key});
-  final AllDayEventCell allDayEvent;
+  final AllDayEvent allDayEvent;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class WeeklyAllDayCell extends StatelessWidget {
 class WeeklyAllDayEventCell extends StatelessWidget {
   const WeeklyAllDayEventCell(this.allDayEvent, {super.key});
 
-  final AllDayEventCell allDayEvent;
+  final AllDayEvent allDayEvent;
 
   @override
   Widget build(BuildContext context) {

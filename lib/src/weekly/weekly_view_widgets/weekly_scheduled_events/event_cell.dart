@@ -1,17 +1,17 @@
-import 'package:calendar_view/src/models/event.dart';
+import 'package:calendar_view/src/models/models.dart';
 import 'package:flutter/material.dart';
 
-class EventCell extends StatefulWidget {
-  const EventCell({super.key, required this.event, required this.pos});
+class ScheduledEventCell extends StatefulWidget {
+  const ScheduledEventCell({super.key, required this.event, required this.pos});
 
-  final Event event;
+  final ScheduledEvent event;
   final (double width, double indent) pos;
 
   @override
-  State<EventCell> createState() => _EventCellState();
+  State<ScheduledEventCell> createState() => _ScheduledEventCellState();
 }
 
-class _EventCellState extends State<EventCell> {
+class _ScheduledEventCellState extends State<ScheduledEventCell> {
   late double duration;
   late String summary;
 
@@ -23,7 +23,7 @@ class _EventCellState extends State<EventCell> {
   }
 
   @override
-  void didUpdateWidget(covariant EventCell oldWidget) {
+  void didUpdateWidget(covariant ScheduledEventCell oldWidget) {
     duration = widget.event.duration;
     summary = widget.event.summary;
     super.didUpdateWidget(oldWidget);
@@ -34,7 +34,7 @@ class _EventCellState extends State<EventCell> {
   Widget build(BuildContext context) {
     final (width, indent) = widget.pos;
     return Positioned(
-      top: widget.event.top,
+      top: widget.event.startTimeInMinutes,
       left: indent,
       child: Column(
         children: [

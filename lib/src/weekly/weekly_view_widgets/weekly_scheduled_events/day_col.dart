@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../../controllers/weekly_controller.dart';
-import '../../../models/event.dart';
+import '../../../models/models.dart';
 import 'event_cell.dart';
 
 class DayCol extends StatelessWidget with WatchItMixin {
@@ -11,10 +11,10 @@ class DayCol extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final events = watchPropertyValue<WeeklyController, List<Event>>(
-        (controller) => controller.events[date.weekday - 1]);
+    final events = watchPropertyValue<WeeklyController, List<ScheduledEvent>>(
+        (controller) => controller.scheduledEvents[date.weekday - 1]);
     watchPropertyValue<WeeklyController, int>(
-        (controller) => controller.events[date.weekday - 1].length);
+        (controller) => controller.scheduledEvents[date.weekday - 1].length);
     return LayoutBuilder(
       builder: (context, constraints) => Stack(
         children: [
@@ -24,13 +24,14 @@ class DayCol extends StatelessWidget with WatchItMixin {
                 .where((event) => event.start.hour == hour)
                 .fold<int>(
                     0,
-                    (int start, Event event) => event.start.minute > start
-                        ? event.start.minute
-                        : start);
+                    (int start, ScheduledEvent event) =>
+                        event.start.minute > start
+                            ? event.start.minute
+                            : start);
 
             final end = events.where((event) => event.end.hour == hour).fold(
                 0,
-                (int end, Event event) =>
+                (int end, ScheduledEvent event) =>
                     event.end.minute > end ? event.end.minute : end);
 
             return EmptyCell(date: date, hour: hour, start: start, end: end);
@@ -42,7 +43,7 @@ class DayCol extends StatelessWidget with WatchItMixin {
   }
 
   List<Widget> drawEvents(
-      {required double width, required List<Event> events}) {
+      {required double width, required List<ScheduledEvent> events}) {
     List<Widget> widgets = [];
     bool overlap = false;
     bool nextdoor = false;
@@ -52,11 +53,13 @@ class DayCol extends StatelessWidget with WatchItMixin {
         final next = events[i + 1];
 
         if (overlap) {
-          widgets.add(EventCell(event: event, pos: (width - 20.0, 20.0)));
+          widgets
+              .add(ScheduledEventCell(event: event, pos: (width - 20.0, 20.0)));
         } else if (nextdoor) {
-          widgets.add(EventCell(event: event, pos: (width / 2, width / 2)));
+          widgets.add(
+              ScheduledEventCell(event: event, pos: (width / 2, width / 2)));
         } else {
-          widgets.add(EventCell(event: event, pos: (width, 0.0)));
+          widgets.add(ScheduledEventCell(event: event, pos: (width, 0.0)));
         }
 
         if (event.end.compareTo(next.start) > 0 &&
@@ -74,11 +77,13 @@ class DayCol extends StatelessWidget with WatchItMixin {
         }
       } else {
         if (nextdoor) {
-          widgets.add(EventCell(event: event, pos: (width / 2, width / 2)));
+          widgets.add(
+              ScheduledEventCell(event: event, pos: (width / 2, width / 2)));
         } else if (overlap) {
-          widgets.add(EventCell(event: event, pos: (width - 20.0, 20.0)));
+          widgets
+              .add(ScheduledEventCell(event: event, pos: (width - 20.0, 20.0)));
         } else {
-          widgets.add(EventCell(event: event, pos: (width, 0.0)));
+          widgets.add(ScheduledEventCell(event: event, pos: (width, 0.0)));
         }
       }
     }
