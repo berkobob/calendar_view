@@ -121,27 +121,18 @@ class WeeklyController with ChangeNotifier {
   }
 
   void addScheduledEvent(
-      {required String task, required DateTime start, required DateTime end}) {
-    final event = Event(
-        calendar: 'test',
-        id: '2',
-        summary: task,
-        start: start,
-        end: end,
-        isAllDay: false);
+      {required Event event, required DateTime start, required DateTime end}) {
+    event.start = start;
+    event.end = end;
+    event.isAllDay = false;
     scheduledEvents[start.weekday - 1].add(ScheduledEvent(event));
     // events[start.weekday - 1].sort();
     notifyListeners();
   }
 
-  void addAllDayEvent({required String task, required DateTime start}) {
-    final event = Event(
-        summary: task,
-        start: start,
-        end: start.add(const Duration(days: 1)),
-        isAllDay: true,
-        id: '',
-        calendar: 'test');
+  void addAllDayEvent({required Event event, required DateTime start}) {
+    event.isAllDay = true;
+    event.start = start;
     eventsController.events.add(event);
     _getAllDayEvents(pageController.page!.toInt());
     notifyListeners();

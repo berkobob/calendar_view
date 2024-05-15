@@ -1,5 +1,6 @@
-import 'package:calendar_view/src/models/all_day_event.dart';
 import 'package:flutter/material.dart';
+
+import '../../models/models.dart';
 
 class WeeklyAllDayCell extends StatelessWidget {
   const WeeklyAllDayCell(this.allDayEvent, {super.key});
@@ -10,8 +11,8 @@ class WeeklyAllDayCell extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) => MouseRegion(
         cursor: SystemMouseCursors.grab,
-        child: Draggable<String>(
-          data: allDayEvent.summary,
+        child: Draggable<Event>(
+          data: allDayEvent.event,
           // onDragStarted: () => print('onDragStarted'),
           // onDragUpdate: print,
           feedback: SizedBox(
@@ -48,33 +49,28 @@ class WeeklyAllDayEventCell extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 1.0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.horizontal(
-            left: Radius.circular((allDayEvent.underflow ?? 0) > 0 ? 0 : 10.0),
-            right: Radius.circular((allDayEvent.overflow ?? 0) > 0 ? 0 : 10.0),
+            left: Radius.circular(allDayEvent.underflow > 0 ? 0 : 10.0),
+            right: Radius.circular(allDayEvent.overflow > 0 ? 0 : 10.0),
           ),
           border: Border(
             top: const BorderSide(),
             bottom: const BorderSide(),
-            left: (allDayEvent.underflow ?? 0) > 0
+            left: allDayEvent.underflow > 0
                 ? BorderSide.none
                 : const BorderSide(),
-            right: (allDayEvent.overflow ?? 0) > 0
-                ? BorderSide.none
-                : const BorderSide(),
+            right:
+                allDayEvent.overflow > 0 ? BorderSide.none : const BorderSide(),
           ),
           color: Colors.amber[200]),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text((allDayEvent.underflow ?? 0) > 0
-              ? '${allDayEvent.underflow} << '
-              : ''),
+          Text(allDayEvent.underflow > 0 ? '${allDayEvent.underflow} << ' : ''),
           Expanded(
               child: Text(allDayEvent.summary,
                   softWrap: true, overflow: TextOverflow.fade, maxLines: 1)),
-          Text((allDayEvent.overflow ?? 0) > 0
-              ? '>> ${allDayEvent.overflow}'
-              : ''),
+          Text(allDayEvent.overflow > 0 ? '>> ${allDayEvent.overflow}' : ''),
         ],
       ),
     );

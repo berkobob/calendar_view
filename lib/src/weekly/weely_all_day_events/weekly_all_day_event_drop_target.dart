@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../controllers/weekly_controller.dart';
+import '../../models/event.dart';
 
 class WeeklyAllDayEventDropTarget extends StatelessWidget {
   const WeeklyAllDayEventDropTarget({super.key});
@@ -17,7 +18,7 @@ class WeeklyAllDayEventDropTarget extends StatelessWidget {
         7,
         (day) => Expanded(
           flex: 2,
-          child: DragTarget<String>(
+          child: DragTarget<Event>(
               // #TODO: Replace with Task
               // #TODO: Don't accept task from this date
               builder: (context, _, __) {
@@ -36,7 +37,7 @@ class WeeklyAllDayEventDropTarget extends StatelessWidget {
               onAcceptWithDetails: (task) {
                 border[day] = null;
                 final start = wc.monday.value.add(Duration(days: day));
-                wc.addAllDayEvent(task: task.data, start: start);
+                wc.addAllDayEvent(event: task.data, start: start);
               }),
         ),
       )

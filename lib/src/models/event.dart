@@ -2,7 +2,7 @@ class Event implements Comparable {
   final String id;
   final String summary;
   final String? description;
-  final bool isAllDay;
+  bool isAllDay;
   DateTime start;
   final String? location;
   String? colorId;

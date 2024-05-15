@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../../controllers/weekly_controller.dart';
-import 'day_col.dart';
+import '../../controllers/weekly_controller.dart';
+import 'day_col_widgets/day_col.dart';
 import 'hour_labels.dart';
 import 'time_line_painter.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../consts/month_names.dart';
-import '../../controllers/weekly_controller.dart';
+import '../consts/month_names.dart';
+import '../controllers/weekly_controller.dart';
 
 class WeeklyAppBar extends StatefulWidget implements PreferredSizeWidget {
   const WeeklyAppBar({super.key})

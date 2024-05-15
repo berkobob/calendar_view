@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../../consts/typedefs.dart';
-import '../../../controllers/weekly_controller.dart';
+import '../../consts/typedefs.dart';
+import '../../controllers/weekly_controller.dart';
 import 'weekly_all_day_cell.dart';
 
 class WeeklyAllDayEvents extends StatelessWidget with WatchItMixin {

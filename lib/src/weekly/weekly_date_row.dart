@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../consts/constants.dart';
-import '../../controllers/weekly_controller.dart';
+import '../consts/constants.dart';
+import '../controllers/weekly_controller.dart';
 
 class WeeklyDateRow extends StatelessWidget {
   const WeeklyDateRow({super.key});
