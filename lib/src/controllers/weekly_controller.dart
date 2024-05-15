@@ -103,8 +103,9 @@ class WeeklyController with ChangeNotifier {
     }
   }
 
-// #TODO Drag to extend task time
-// #TODO Drag all day events to a scheduled time
+  // #TODO: Only drag one day all day events
+  // #TODO: Move scheduled events to all day events
+  // #TODO: look at checkboxes for tasks
 
   void _loadEventsForWeek(int page) {
     final week = dateFromPageNumber(page);
@@ -120,19 +121,19 @@ class WeeklyController with ChangeNotifier {
     notifyListeners();
   }
 
-  void addScheduledEvent(
-      {required Event event, required DateTime start, required DateTime end}) {
-    event.start = start;
-    event.end = end;
-    event.isAllDay = false;
-    scheduledEvents[start.weekday - 1].add(ScheduledEvent(event));
+  void addScheduledEvent({Event? was, required Event isNow}) {
+    if (was != null) {
+      eventsController.events.remove(was);
+      scheduledEvents[was.start.weekday - 1].removeWhere((e) => e.event == was);
+    }
+
+    eventsController.events.add(isNow);
+    scheduledEvents[isNow.start.weekday - 1].add(ScheduledEvent(isNow));
     // events[start.weekday - 1].sort();
     notifyListeners();
   }
 
-  void addAllDayEvent({required Event event, required DateTime start}) {
-    event.isAllDay = true;
-    event.start = start;
+  void addAllDayEvent({required Event event}) {
     eventsController.events.add(event);
     _getAllDayEvents(pageController.page!.toInt());
     notifyListeners();

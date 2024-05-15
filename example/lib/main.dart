@@ -82,8 +82,8 @@ class DraggableTask extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget child = ListTile(title: Text(task));
-    return Draggable<String>(
-        data: task,
+    return Draggable<Task>(
+        data: Task(summary: task),
         feedback: ConstrainedBox(
             constraints: BoxConstraints.loose(const Size(150, 75)),
             child: Opacity(
@@ -103,9 +103,9 @@ class DraggableTask extends StatelessWidget {
 Future<List<Event>> loadData() async {
   final data = await rootBundle.loadString('assets/data.json');
   final json = jsonDecode(data);
-  return json['items']
-      .where((x) => x['status'] == 'confirmed')
-      .map<Event>((x) => Event.fromJson(x, calendar: 'Test Calendar'))
-      .toList()
+  return json['items'].where((x) => x['status'] == 'confirmed').map<Event>((x) {
+    x['calendar'] = 'Test Calendar';
+    return Event.fromJson(x);
+  }).toList()
     ..sort();
 }

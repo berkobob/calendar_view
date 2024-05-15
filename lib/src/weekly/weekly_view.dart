@@ -5,7 +5,7 @@ import '../controllers/weekly_controller.dart';
 import 'weekly_app_bar.dart';
 import 'weekly_date_row.dart';
 import 'weekly_scheduled_events/weekly_scheduled_events.dart';
-import 'weely_all_day_events/weekly_all_day_event_drop_target.dart';
+import 'weely_all_day_events/weekly_all_day_drop_target.dart';
 import 'weely_all_day_events/weekly_all_day_events.dart';
 
 class WeeklyView extends StatelessWidget {
@@ -24,7 +24,7 @@ class WeeklyView extends StatelessWidget {
               Stack(
                 children: [
                   Positioned.fill(
-                    child: WeeklyAllDayEventDropTarget(),
+                    child: WeeklyAllDayDropTarget(),
                   ),
                   Column(
                     children: [

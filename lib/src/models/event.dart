@@ -1,35 +1,37 @@
-class Event implements Comparable {
-  final String id;
-  final String summary;
+import 'task.dart';
+
+class Event extends Task implements Comparable {
+  final String? id;
   final String? description;
   bool isAllDay;
   DateTime start;
   final String? location;
   String? colorId;
   DateTime end;
-  final String calendar;
+  final String? calendar;
 
   Event(
-      {required this.id,
-      required this.summary,
+      {this.id,
+      required super.summary,
       this.description,
       required this.isAllDay,
       required this.start,
       this.location,
       this.colorId,
       required this.end,
-      required this.calendar});
+      this.calendar});
 
-  Event.fromJson(Map<String, dynamic> json, {required this.calendar})
+  Event.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        summary = json['summary'] ?? 'Private Event',
         description = json['description'],
         isAllDay = json['start']['date'] != null,
         start =
             DateTime.parse(json['start']['date'] ?? json['start']['dateTime']),
         location = json['location'],
         colorId = json['colorId'],
-        end = DateTime.parse(json['end']['date'] ?? json['end']['dateTime']) {
+        end = DateTime.parse(json['end']['date'] ?? json['end']['dateTime']),
+        calendar = json['calendar'],
+        super(summary: json['summary'] ?? 'Private Event') {
     if (json['recurrence'] case var rules? when rules is List) {
       final frequency = rules
           .firstWhere((x) => x.contains('RRULE'))
@@ -44,6 +46,29 @@ class Event implements Comparable {
       }
     }
   }
+
+  Map<String, dynamic> get toMap => {
+        'id': id,
+        'summary': summary,
+        'description': description,
+        'isAllDay': isAllDay,
+        'start': start,
+        'location': location,
+        'colorId': colorId,
+        'end': end,
+        'calendar': calendar
+      };
+
+  Event.fromMap(Map<String, dynamic> json)
+      : id = json['id'],
+        description = json['description'],
+        isAllDay = json['isAllDay'],
+        start = json['start'],
+        location = json['location'],
+        colorId = json['colorId'],
+        end = json['end'],
+        calendar = json['calendar'],
+        super(summary: json['summary']);
 
   // @override
   // String toString() =>
