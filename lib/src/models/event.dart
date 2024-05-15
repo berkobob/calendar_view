@@ -11,7 +11,7 @@ class Event implements Comparable {
   DateTime end;
   final String calendar;
 
-  int get week => start.weekOfYear;
+  int get weekNumber => start.weekOfYear;
   int get year => start.year;
 
   String get startTimeString =>
@@ -60,7 +60,7 @@ class Event implements Comparable {
 
   @override
   String toString() =>
-      '$year:$week - $summary on $start till $end and ${isAllDay ? "is all day" : "is not all day"}';
+      '$year:$weekNumber - $summary on $start till $end and ${isAllDay ? "is all day" : "is not all day"}';
 
   @override
   int compareTo(other) => start.compareTo(other.start);

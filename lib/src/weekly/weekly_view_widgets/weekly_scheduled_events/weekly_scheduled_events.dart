@@ -17,24 +17,25 @@ class WeeklyScheduledEvents extends StatefulWidget {
 
 class _WeeklyScheduledEventsState extends State<WeeklyScheduledEvents> {
   final wc = di.get<WeeklyController>();
-  late final ScrollController scrollController;
+  final ScrollController scrollController = ScrollController();
   late final Timer timer;
 
   @override
   void initState() {
+    late final double offset;
     super.initState();
-    scrollController =
-        ScrollController(initialScrollOffset: offset, keepScrollOffset: true);
+
     timer = Timer.periodic(const Duration(minutes: 1), (_) {
-      setState(() => scrollController.jumpTo(offset));
-      // .jumpTo(offset - MediaQuery.of(context).size.height / 3));
-      // .animateTo(offset,
-      //     duration: const Duration(milliseconds: 100),
-      //     curve: Curves.linear));
+      setState(() => scrollController.jumpTo(time + offset));
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      offset = 0 - MediaQuery.of(context).size.height / 5;
+      scrollController.jumpTo(time + offset);
     });
   }
 
-  double get offset => (DateTime.now().hour * 60.0 + DateTime.now().minute);
+  double get time => (DateTime.now().hour * 60.0 + DateTime.now().minute);
 
   @override
   void dispose() {
@@ -44,19 +45,12 @@ class _WeeklyScheduledEventsState extends State<WeeklyScheduledEvents> {
   }
 
   @override
-  void didUpdateWidget(covariant WeeklyScheduledEvents oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    scrollController.animateTo(offset,
-        duration: const Duration(milliseconds: 500), curve: Curves.linear);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Expanded(
       child: SingleChildScrollView(
         controller: scrollController,
         child: CustomPaint(
-          painter: wc.showTimeLine ? TimeLinePainter(offset: offset) : null,
+          painter: wc.showTimeLine ? TimeLinePainter(offset: time) : null,
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const Expanded(flex: 1, child: HourLabels()),
             for (int day = 0; day < 7; day++)

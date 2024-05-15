@@ -24,7 +24,6 @@ class _EventCellState extends State<EventCell> {
 
   @override
   void didUpdateWidget(covariant EventCell oldWidget) {
-    print('${oldWidget.event.summary} BECOMING ${widget.event.summary}');
     duration = widget.event.duration;
     summary = widget.event.summary;
     super.didUpdateWidget(oldWidget);
@@ -65,11 +64,13 @@ class _EventCellState extends State<EventCell> {
           Draggable(
               data: widget.event,
               axis: Axis.vertical,
-              feedback: Container(height: 0.5, width: width, color: Colors.red),
+              feedback: Container(),
               // onDragStarted: () => print('onDragStarted'),
               onDragUpdate: (details) => setState(() {
-                    print(details.delta.dy);
-                    duration += details.delta.dy;
+                    // print(
+                    //     'Delta: ${details.delta.dy} Global: ${details.globalPosition.dy} Local: ${details.localPosition.dy}');
+                    // print(x);
+                    setState(() => duration += details.delta.dy);
                   }),
               child: MouseRegion(
                 cursor: SystemMouseCursors.resizeUpDown,
