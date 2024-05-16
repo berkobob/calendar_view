@@ -53,10 +53,7 @@ class _WeeklyScheduledEventsState extends State<WeeklyScheduledEvents> {
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const Expanded(flex: 1, child: HourLabels()),
             for (int day = 0; day < 7; day++)
-              Expanded(
-                flex: 2,
-                child: DayCol(date: wc.monday.add(Duration(days: day))),
-              ),
+              Expanded(flex: 2, child: DayCol(day: day)),
           ]),
         ),
       ),

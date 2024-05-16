@@ -41,8 +41,9 @@ class WeeklyAllDayDropTarget extends StatelessWidget {
               onAcceptWithDetails: (task) {
                 Event? was = task.data is Event ? task.data as Event : null;
 
-                Map<String, dynamic> json =
-                    was != null ? was.toMap : {'summary': task.data.summary};
+                Map<String, dynamic> json = was != null
+                    ? was.toMap
+                    : {'summary': '☐ ${task.data.summary}'};
 
                 json['start'] = wc.monday.add(Duration(days: day));
                 json['end'] = wc.monday.add(Duration(days: day + 1));

@@ -111,9 +111,7 @@ class WeeklyController with ChangeNotifier {
     }
   }
 
-  // #TODO: Only drag one day all day events
-  // #TODO: Move scheduled events to all day events
-  // #TODO: look at checkboxes for tasks
+  // #TODO: look at checkboxes for tasks ☐
 
   void _getScheduledEvents() {
     scheduledEvents = List.generate(

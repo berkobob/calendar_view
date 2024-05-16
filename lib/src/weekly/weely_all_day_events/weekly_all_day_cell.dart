@@ -13,8 +13,6 @@ class WeeklyAllDayCell extends StatelessWidget {
         cursor: SystemMouseCursors.grab,
         child: Draggable<Event>(
           data: allDayEvent.event,
-          // onDragStarted: () => print('onDragStarted'),
-          // onDragUpdate: print,
           feedback: SizedBox(
               width: constraints.maxWidth,
               child: Material(
@@ -45,7 +43,6 @@ class WeeklyAllDayEventCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.5),
       padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 1.0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.horizontal(
@@ -68,8 +65,26 @@ class WeeklyAllDayEventCell extends StatelessWidget {
         children: [
           Text(allDayEvent.underflow > 0 ? '${allDayEvent.underflow} << ' : ''),
           Expanded(
-              child: Text(allDayEvent.summary,
-                  softWrap: true, overflow: TextOverflow.fade, maxLines: 1)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                if (allDayEvent.summary.replaceAll('☐ ', '') !=
+                    allDayEvent.summary)
+                  Transform.scale(
+                    scale: 0.75,
+                    child: Checkbox(value: false, onChanged: (_) {}),
+                  ),
+                Expanded(
+                  child: Text(
+                    allDayEvent.summary.replaceAll('☐ ', ''),
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+              ],
+            ),
+          ),
           Text(allDayEvent.overflow > 0 ? '>> ${allDayEvent.overflow}' : ''),
         ],
       ),

@@ -24,6 +24,7 @@ void main() {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      themeMode: ThemeMode.dark,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('My Calendar View Example'),
@@ -67,7 +68,7 @@ class MainView extends StatelessWidget {
             events: events,
             initDate: DateTime(2024, 3, 4),
             showAppBar: true,
-            autoScroll: false,
+            autoScroll: true,
             // showTimeLine: true,
           ),
         ),

@@ -7,11 +7,12 @@ import '../../../models/models.dart';
 import 'scheduled_event_cell.dart';
 
 class DayCol extends StatelessWidget with WatchItMixin {
-  const DayCol({required this.date, super.key});
-  final DateTime date;
+  const DayCol({required this.day, super.key});
+  final int day;
 
   @override
   Widget build(BuildContext context) {
+    final date = di.get<WeeklyController>().monday.add(Duration(days: day));
     final events = watchPropertyValue<WeeklyController, List<ScheduledEvent>>(
         (controller) => controller.scheduledEvents[date.weekday - 1]);
     watchPropertyValue<WeeklyController, int>(
