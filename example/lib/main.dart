@@ -67,6 +67,7 @@ class MainView extends StatelessWidget {
             events: events,
             initDate: DateTime(2024, 3, 4),
             showAppBar: true,
+            autoScroll: false,
             // showTimeLine: true,
           ),
         ),

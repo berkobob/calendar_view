@@ -14,6 +14,7 @@ class CalendarView extends StatelessWidget {
     DateTime? initDate,
     bool showAppBar = false,
     bool showTimeLine = true,
+    bool autoScroll = true,
     super.key,
   }) {
     if (!di.isRegistered<EventsController>()) {
@@ -21,8 +22,10 @@ class CalendarView extends StatelessWidget {
           EventsController(events: events, initDate: initDate));
     }
     if (!di.isRegistered<WeeklyController>()) {
-      di.registerLazySingleton(() =>
-          WeeklyController(showAppBar: showAppBar, showTimeLine: showTimeLine));
+      di.registerLazySingleton(() => WeeklyController(
+          showAppBar: showAppBar,
+          showTimeLine: showTimeLine,
+          autoScroll: autoScroll));
     }
   }
 

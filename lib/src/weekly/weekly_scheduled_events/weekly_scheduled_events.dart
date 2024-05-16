@@ -18,14 +18,15 @@ class WeeklyScheduledEvents extends StatefulWidget {
 class _WeeklyScheduledEventsState extends State<WeeklyScheduledEvents> {
   final wc = di.get<WeeklyController>();
   final ScrollController scrollController = ScrollController();
-  late final Timer timer;
+  late final Timer? timer;
 
-  int x = 0;
   @override
   void initState() {
     super.initState();
     timer = Timer.periodic(const Duration(minutes: 1), (_) {
-      setState(() => scrollController.jumpTo(time - 180.0));
+      if (wc.autoScroll) {
+        setState(() => scrollController.jumpTo(time - 180.0));
+      }
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -39,7 +40,7 @@ class _WeeklyScheduledEventsState extends State<WeeklyScheduledEvents> {
   void dispose() {
     super.dispose();
     scrollController.dispose();
-    timer.cancel();
+    timer?.cancel();
   }
 
   @override
@@ -54,7 +55,7 @@ class _WeeklyScheduledEventsState extends State<WeeklyScheduledEvents> {
             for (int day = 0; day < 7; day++)
               Expanded(
                 flex: 2,
-                child: DayCol(date: wc.monday.value.add(Duration(days: day))),
+                child: DayCol(date: wc.monday.add(Duration(days: day))),
               ),
           ]),
         ),

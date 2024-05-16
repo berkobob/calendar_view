@@ -77,7 +77,8 @@ class AppBarTitleCell extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final start = watchValue<WeeklyController, DateTime>((c) => c.monday);
+    final start =
+        watchPropertyValue<WeeklyController, DateTime>((c) => c.monday);
     final end = start.add(const Duration(days: 6));
 
     if (start.month == end.month) {

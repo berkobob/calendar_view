@@ -4,13 +4,14 @@ import 'package:watch_it/watch_it.dart';
 import '../consts/constants.dart';
 import '../controllers/weekly_controller.dart';
 
-class WeeklyDateRow extends StatelessWidget {
+class WeeklyDateRow extends StatelessWidget with WatchItMixin {
   const WeeklyDateRow({super.key});
 
   @override
   Widget build(BuildContext context) {
     final wc = di.get<WeeklyController>();
-    final monday = wc.monday.value;
+    final monday =
+        watchPropertyValue<WeeklyController, DateTime>((c) => c.monday);
     final sunday = monday.add(const Duration(days: 6));
     final showMonth = !wc.showAppBar;
     Border? border;

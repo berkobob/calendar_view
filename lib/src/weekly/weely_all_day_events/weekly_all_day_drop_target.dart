@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:week_of_year/date_week_extensions.dart';
 
 import '../../controllers/weekly_controller.dart';
 import '../../models/models.dart';
@@ -45,8 +44,8 @@ class WeeklyAllDayDropTarget extends StatelessWidget {
                 Map<String, dynamic> json =
                     was != null ? was.toMap : {'summary': task.data.summary};
 
-                json['start'] = wc.monday.value.add(Duration(days: day));
-                json['end'] = wc.monday.value.add(Duration(days: day + 1));
+                json['start'] = wc.monday.add(Duration(days: day));
+                json['end'] = wc.monday.add(Duration(days: day + 1));
                 json['isAllDay'] = true;
                 json['calendar'] = 'Default calendar';
                 wc.addEvent(was: was, newEvent: Event.fromMap(json));

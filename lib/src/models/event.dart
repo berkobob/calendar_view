@@ -70,9 +70,9 @@ class Event extends Task implements Comparable {
         calendar = json['calendar'],
         super(summary: json['summary']);
 
-  // @override
-  // String toString() =>
-  //     '$year:$weekNumber - $summary on $start till $end and ${isAllDay ? "is all day" : "is not all day"}';
+  @override
+  String toString() =>
+      '$summary on $start till $end and ${isAllDay ? "is all day" : "is not all day"}';
 
   @override
   int compareTo(other) => start.compareTo(other.start);

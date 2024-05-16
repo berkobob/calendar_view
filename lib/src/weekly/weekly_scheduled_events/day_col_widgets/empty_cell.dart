@@ -44,7 +44,7 @@ class EmptyCell extends StatelessWidget {
         Map<String, dynamic> json =
             was != null ? was.toMap : {'summary': task.data.summary};
 
-        json['start'] = dateTime.add(Duration(minutes: end));
+        json['start'] = dateTime;
         json['end'] = json['start'].add(Duration(minutes: duration));
         json['isAllDay'] = false;
         json['calendar'] = 'Default calendar';

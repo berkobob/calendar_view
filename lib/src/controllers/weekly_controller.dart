@@ -10,6 +10,7 @@ import 'events_controller.dart';
 class WeeklyController with ChangeNotifier {
   final bool showAppBar;
   final bool showTimeLine;
+  final bool autoScroll;
 
   final eventsController = di.get<EventsController>();
 
@@ -26,17 +27,24 @@ class WeeklyController with ChangeNotifier {
         value ? CrossFadeState.showFirst : CrossFadeState.showSecond;
   }
 
-  ValueNotifier<DateTime> monday =
-      ValueNotifier(di.get<EventsController>().initDate);
+  DateTime _monday = di.get<EventsController>().initDate;
+  DateTime get monday => _monday;
+  set monday(DateTime date) {
+    _monday = date;
+    notifyListeners();
+  }
 
   final PageController pageController = PageController();
 
-  WeeklyController({required this.showAppBar, required this.showTimeLine}) {
+  WeeklyController(
+      {required this.showAppBar,
+      required this.showTimeLine,
+      required this.autoScroll}) {
     pageController.addListener(() {
       switch (pageController.page) {
         case (double page) when (page % 1.0 == 0.0):
+          monday = dateFromPageNumber(page.toInt());
           _loadEventsForWeek();
-          monday.value = dateFromPageNumber(page.toInt());
       }
     });
     _loadEventsForWeek();
@@ -54,8 +62,8 @@ class WeeklyController with ChangeNotifier {
   void _getAllDayEvents() {
     final allDayEventsThisWeek = eventsController.allDayEvents
         .where((event) =>
-            event.start.isBefore(monday.value.add(const Duration(days: 7))) &&
-            event.end.isAfter(monday.value))
+            event.start.isBefore(monday.add(const Duration(days: 7))) &&
+            event.end.isAfter(monday))
         .map((event) => AllDayEvent(event))
         .toList()
       ..sort();
@@ -68,14 +76,14 @@ class WeeklyController with ChangeNotifier {
       AllDayEvent event = allDayEventsThisWeek.firstWhere(
         (event) =>
             event.start.weekday == day ||
-            (event.start.weekOfYear < monday.value.weekOfYear),
+            (event.start.weekOfYear < monday.weekOfYear),
         orElse: () => AllDayEvent(),
       );
 
       if (event.event != null &&
-          event.start.weekOfYear < monday.value.weekOfYear &&
+          event.start.weekOfYear < monday.weekOfYear &&
           event.summary != '') {
-        event.underflow = monday.value.difference(event.start).inDays.abs();
+        event.underflow = monday.difference(event.start).inDays.abs();
         event.duration -= event.underflow;
         event.start = monday;
       }
@@ -107,12 +115,12 @@ class WeeklyController with ChangeNotifier {
   // #TODO: Move scheduled events to all day events
   // #TODO: look at checkboxes for tasks
 
-  void _getScheduledEventsk() {
+  void _getScheduledEvents() {
     scheduledEvents = List.generate(
         7,
         (day) => eventsController.scheduledEvents
             .where((event) =>
-                event.start.isSameDate(monday.value.add(Duration(days: day))))
+                event.start.isSameDate(monday.add(Duration(days: day))))
             .map((event) => ScheduledEvent(event))
             .toList()
           ..sort());
@@ -120,7 +128,7 @@ class WeeklyController with ChangeNotifier {
   }
 
   void _loadEventsForWeek() {
-    _getScheduledEventsk();
+    _getScheduledEvents();
     _getAllDayEvents();
     notifyListeners();
   }
@@ -136,8 +144,14 @@ class WeeklyController with ChangeNotifier {
 
     eventsController.events.add(newEvent);
 
-    newEvent.isAllDay ? _getAllDayEvents() : _getScheduledEventsk();
+    newEvent.isAllDay ? _getAllDayEvents() : _getScheduledEvents();
 
     notifyListeners();
+  }
+
+  void setDuration(Event event, {required double duration}) {
+    final mins = (duration / 15).round() * 15;
+    final e = eventsController.events.firstWhere((e) => e == event);
+    e.end = e.start.add(Duration(minutes: mins));
   }
 }

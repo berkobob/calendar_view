@@ -1,6 +1,9 @@
 import 'package:calendar_view/src/models/models.dart';
 import 'package:calendar_view/src/weekly/weekly_scheduled_events/day_col_widgets/scheduled_event_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
+
+import '../../../controllers/weekly_controller.dart';
 
 class ScheduledEventCell extends StatefulWidget {
   const ScheduledEventCell({super.key, required this.event, required this.pos});
@@ -14,19 +17,19 @@ class ScheduledEventCell extends StatefulWidget {
 
 class _ScheduledEventCellState extends State<ScheduledEventCell> {
   late double duration;
-  late String summary;
+  // late String summary;
 
   @override
   void initState() {
     duration = widget.event.duration;
-    summary = widget.event.summary;
+    // summary = widget.event.summary;
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant ScheduledEventCell oldWidget) {
     duration = widget.event.duration;
-    summary = widget.event.summary;
+    // summary = widget.event.summary;
     super.didUpdateWidget(oldWidget);
   }
 
@@ -34,6 +37,7 @@ class _ScheduledEventCellState extends State<ScheduledEventCell> {
   @override
   Widget build(BuildContext context) {
     final (width, indent) = widget.pos;
+    duration = duration >= 5.0 ? duration : 5.0;
     return Positioned(
       top: widget.event.startTimeInMinutes,
       left: indent,
@@ -61,13 +65,16 @@ class _ScheduledEventCellState extends State<ScheduledEventCell> {
               data: widget.event,
               axis: Axis.vertical,
               feedback: Container(),
-              // onDragStarted: () => print('onDragStarted'),
-              onDragUpdate: (details) => setState(() {
-                    // print(
-                    //     'Delta: ${details.delta.dy} Global: ${details.globalPosition.dy} Local: ${details.localPosition.dy}');
-                    // print(x);
-                    setState(() => duration += details.delta.dy);
-                  }),
+              onDragEnd: (_) {
+                di
+                    .get<WeeklyController>()
+                    .setDuration(widget.event.event, duration: duration);
+                setState(() {});
+              },
+              onDragUpdate: (details) {
+                duration += details.delta.dy;
+                if (duration >= 5.0) setState(() {});
+              },
               child: MouseRegion(
                 cursor: SystemMouseCursors.resizeUpDown,
                 // onEnter: (details) => print('onEnter: $details'),
