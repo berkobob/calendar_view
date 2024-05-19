@@ -3,7 +3,7 @@ import 'event.dart';
 class ScheduledEvent implements Comparable {
   ScheduledEvent(this.event);
 
-  final Event event;
+  final CVEvent event;
 
   DateTime get start => event.start;
   DateTime get end => event.end;

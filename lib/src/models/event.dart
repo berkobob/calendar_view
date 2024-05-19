@@ -1,6 +1,6 @@
 import 'task.dart';
 
-class Event extends Task implements Comparable {
+class CVEvent extends CVTask implements Comparable {
   final String? id;
   final String? description;
   bool isAllDay;
@@ -10,7 +10,7 @@ class Event extends Task implements Comparable {
   DateTime end;
   final String? calendar;
 
-  Event(
+  CVEvent(
       {this.id,
       required super.summary,
       this.description,
@@ -21,7 +21,7 @@ class Event extends Task implements Comparable {
       required this.end,
       this.calendar});
 
-  Event.fromJson(Map<String, dynamic> json)
+  CVEvent.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         description = json['description'],
         isAllDay = json['start']['date'] != null,
@@ -59,7 +59,7 @@ class Event extends Task implements Comparable {
         'calendar': calendar
       };
 
-  Event.fromMap(Map<String, dynamic> json)
+  CVEvent.fromMap(Map<String, dynamic> json)
       : id = json['id'],
         description = json['description'],
         isAllDay = json['isAllDay'],

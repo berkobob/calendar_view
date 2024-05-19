@@ -1,6 +1,6 @@
-class Task {
+class CVTask {
   String summary;
-  Task({required this.summary});
+  CVTask({required this.summary});
 
   @override
   String toString() => summary;

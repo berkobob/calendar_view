@@ -131,7 +131,7 @@ class WeeklyController with ChangeNotifier {
     notifyListeners();
   }
 
-  void addEvent({Event? was, required Event newEvent}) {
+  void addEvent({CVEvent? was, required CVEvent newEvent}) {
     if (was != null) {
       eventsController.events.remove(was);
       was.isAllDay
@@ -147,7 +147,7 @@ class WeeklyController with ChangeNotifier {
     notifyListeners();
   }
 
-  void setDuration(Event event, {required double duration}) {
+  void setDuration(CVEvent event, {required double duration}) {
     final mins = (duration / 15).round() * 15;
     final e = eventsController.events.firstWhere((e) => e == event);
     e.end = e.start.add(Duration(minutes: mins));

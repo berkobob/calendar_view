@@ -37,7 +37,7 @@ void main() {
                   ConnectionState.active =>
                     const Center(child: CircularProgressIndicator()),
                   ConnectionState.done =>
-                    MainView(events: snapshot.data as List<Event>),
+                    MainView(events: snapshot.data as List<CVEvent>),
                 }),
       ),
     ),
@@ -46,7 +46,7 @@ void main() {
 
 class MainView extends StatelessWidget {
   const MainView({super.key, required this.events});
-  final List<Event> events;
+  final List<CVEvent> events;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,7 @@ class MainView extends StatelessWidget {
           flex: 7,
           child: CalendarView(
             view: CalendarViews.weekly,
-            events: events,
+            // events: events,
             initDate: DateTime(2024, 3, 4),
             showAppBar: true,
             autoScroll: true,
@@ -84,8 +84,8 @@ class DraggableTask extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget child = ListTile(title: Text(task));
-    return Draggable<Task>(
-        data: Task(summary: task),
+    return Draggable<CVTask>(
+        data: CVTask(summary: task),
         feedback: ConstrainedBox(
             constraints: BoxConstraints.loose(const Size(150, 75)),
             child: Opacity(
@@ -102,12 +102,14 @@ class DraggableTask extends StatelessWidget {
   }
 }
 
-Future<List<Event>> loadData() async {
+Future<List<CVEvent>> loadData() async {
   final data = await rootBundle.loadString('assets/data.json');
   final json = jsonDecode(data);
-  return json['items'].where((x) => x['status'] == 'confirmed').map<Event>((x) {
+  return json['items']
+      .where((x) => x['status'] == 'confirmed')
+      .map<CVEvent>((x) {
     x['calendar'] = 'Test Calendar';
-    return Event.fromJson(x);
+    return CVEvent.fromJson(x);
   }).toList()
     ..sort();
 }

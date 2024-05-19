@@ -1,17 +1,19 @@
 import '../models/event.dart';
 
 class EventsController {
-  final List<Event> events;
+  final List<CVEvent> events;
   late final DateTime initDate;
 
-  EventsController({events, initDate}) : events = events ?? <Event>[] {
-    events.sort();
-    this.initDate = initDate ?? this.events.first ?? DateTime.now();
+  EventsController({List<CVEvent>? events, DateTime? initDate})
+      : events = events ?? <CVEvent>[] {
+    this.events.sort();
+    this.initDate = initDate ??
+        (this.events.isNotEmpty ? this.events.first.start : DateTime.now());
   }
 
-  Iterable<Event> get allDayEvents => events.where((event) => event.isAllDay);
+  Iterable<CVEvent> get allDayEvents => events.where((event) => event.isAllDay);
 
-  Iterable<Event> get scheduledEvents =>
+  Iterable<CVEvent> get scheduledEvents =>
       events.where((event) => !event.isAllDay);
 
   // void addEvent(

@@ -10,7 +10,7 @@ import 'weekly/weekly_view.dart';
 class CalendarView extends StatelessWidget {
   CalendarView({
     this.view = CalendarViews.weekly,
-    List<Event>? events,
+    List<CVEvent>? events,
     DateTime? initDate,
     bool showAppBar = false,
     bool showTimeLine = true,

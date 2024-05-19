@@ -5,7 +5,7 @@ class AllDayEvent implements Comparable {
       : duration =
             event != null ? event.end.difference(event.start).inDays.abs() : 0;
 
-  final Event? event;
+  final CVEvent? event;
   int overflow = 0, underflow = 0, duration = 0;
 
   set start(start) => event!.start = start;

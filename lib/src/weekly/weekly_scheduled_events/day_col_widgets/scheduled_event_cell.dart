@@ -39,7 +39,7 @@ class _ScheduledEventCellState extends State<ScheduledEventCell> {
       left: indent,
       child: Column(
         children: [
-          Draggable<Event>(
+          Draggable<CVEvent>(
             data: widget.event.event,
             childWhenDragging: Opacity(
               opacity: 0.5,

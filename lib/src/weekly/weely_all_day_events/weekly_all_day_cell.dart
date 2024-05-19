@@ -11,7 +11,7 @@ class WeeklyAllDayCell extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) => MouseRegion(
         cursor: SystemMouseCursors.grab,
-        child: Draggable<Event>(
+        child: Draggable<CVEvent>(
           data: allDayEvent.event,
           feedback: SizedBox(
               width: constraints.maxWidth,
