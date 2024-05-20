@@ -21,7 +21,7 @@ class EmptyCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final wc = di.get<WeeklyController>();
     Border? border = Border.all(color: Colors.grey[200]!);
-    return DragTarget<CVTask>(
+    return DragTarget<Task>(
       onWillAcceptWithDetails: (task) {
         if (task.data case CVEvent event) {
           if (event.isAllDay &&
@@ -56,7 +56,6 @@ class EmptyCell extends StatelessWidget {
         height: 60.0,
         decoration: BoxDecoration(
           border: border,
-          borderRadius: BorderRadius.circular(10.0),
         ),
       ),
     );

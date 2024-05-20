@@ -14,6 +14,8 @@ class AppScrollBehavior extends MaterialScrollBehavior {
       };
 }
 
+List<CVEvent> allEvents = [];
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
@@ -42,6 +44,21 @@ void main() {
       ),
     ),
   );
+
+  Future.delayed(const Duration(seconds: 5), () {
+    EventsController.events.add(allEvents);
+  });
+
+  Future.delayed(const Duration(seconds: 10), () {
+    debugPrint('Lets try this');
+    EventsController.events.add([
+      CVEvent(
+          summary: 'IT WORKED',
+          isAllDay: false,
+          start: DateTime(2024, 03, 07, 08),
+          end: DateTime(2024, 03, 07, 09))
+    ]);
+  });
 }
 
 class MainView extends StatelessWidget {
@@ -50,6 +67,7 @@ class MainView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    allEvents = events;
     return Row(
       children: [
         Expanded(
@@ -63,8 +81,8 @@ class MainView extends StatelessWidget {
             ])),
         Expanded(
           flex: 7,
-          child: CalendarView(
-            view: CalendarViews.weekly,
+          child: CVCalendar(
+            view: CalendarView.weekly,
             // events: events,
             initDate: DateTime(2024, 3, 4),
             showAppBar: true,
@@ -84,8 +102,8 @@ class DraggableTask extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget child = ListTile(title: Text(task));
-    return Draggable<CVTask>(
-        data: CVTask(summary: task),
+    return Draggable<Task>(
+        data: Task(summary: task),
         feedback: ConstrainedBox(
             constraints: BoxConstraints.loose(const Size(150, 75)),
             child: Opacity(

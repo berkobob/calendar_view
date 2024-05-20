@@ -5,7 +5,8 @@ import '../../controllers/weekly_controller.dart';
 import '../../models/models.dart';
 
 class WeeklyAllDayDropTarget extends StatelessWidget {
-  const WeeklyAllDayDropTarget({super.key});
+  const WeeklyAllDayDropTarget({super.key, this.child});
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +19,14 @@ class WeeklyAllDayDropTarget extends StatelessWidget {
         7,
         (day) => Expanded(
           flex: 2,
-          child: DragTarget<CVTask>(
+          child: DragTarget<Task>(
               builder: (context, _, __) {
                 return Container(
                   decoration: BoxDecoration(
                     border: border[day],
                     borderRadius: BorderRadius.circular(10.0),
                   ),
+                  child: child,
                 );
               },
               onLeave: (data) => border[day] = null,

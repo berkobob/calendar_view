@@ -27,7 +27,9 @@ class WeeklyController with ChangeNotifier {
         value ? CrossFadeState.showFirst : CrossFadeState.showSecond;
   }
 
-  DateTime _monday = di.get<EventsController>().initDate;
+  DateTime _monday = dateTimeFromWeekNumber(
+      di.get<EventsController>().initDate.year,
+      di.get<EventsController>().initDate.weekOfYear);
   DateTime get monday => _monday;
   set monday(DateTime date) {
     _monday = date;
@@ -40,6 +42,7 @@ class WeeklyController with ChangeNotifier {
       {required this.showAppBar,
       required this.showTimeLine,
       required this.autoScroll}) {
+    // _monday = DateTime(_monday.year, _monday.month, _monday.day);
     pageController.addListener(() {
       switch (pageController.page) {
         case (double page) when (page % 1.0 == 0.0):
@@ -48,6 +51,8 @@ class WeeklyController with ChangeNotifier {
       }
     });
     _loadEventsForWeek();
+
+    eventsController.updates.listen((_) => _loadEventsForWeek());
   }
   // #TODO: Make these switches and notifiers
   // #TODO: Make autoscrolling an option
@@ -133,14 +138,14 @@ class WeeklyController with ChangeNotifier {
 
   void addEvent({CVEvent? was, required CVEvent newEvent}) {
     if (was != null) {
-      eventsController.events.remove(was);
+      eventsController.remove(was);
       was.isAllDay
           ? _getAllDayEvents()
           : scheduledEvents[was.start.weekday - 1]
               .removeWhere((e) => e.event == was);
     }
 
-    eventsController.events.add(newEvent);
+    EventsController.events.add([newEvent]);
 
     newEvent.isAllDay ? _getAllDayEvents() : _getScheduledEvents();
 
@@ -149,7 +154,7 @@ class WeeklyController with ChangeNotifier {
 
   void setDuration(CVEvent event, {required double duration}) {
     final mins = (duration / 15).round() * 15;
-    final e = eventsController.events.firstWhere((e) => e == event);
+    final e = eventsController.firstWhere((e) => e == event);
     e.end = e.start.add(Duration(minutes: mins));
   }
 }

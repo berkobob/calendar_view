@@ -1,4 +1,4 @@
-enum CalendarViews {
+enum CalendarView {
   daily,
   weekly,
   fiveDays,

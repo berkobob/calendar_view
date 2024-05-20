@@ -23,16 +23,21 @@ class WeeklyView extends StatelessWidget {
             return const Column(children: [
               Stack(
                 children: [
-                  Positioned.fill(
-                    child: WeeklyAllDayDropTarget(),
-                  ),
                   Column(
                     children: [
                       WeeklyDateRow(),
-                      Divider(),
-                      WeeklyAllDayEvents(),
                     ],
                   ),
+                  Positioned.fill(
+                    child: WeeklyAllDayDropTarget(),
+                  ),
+                ],
+              ),
+              Divider(),
+              Stack(
+                children: [
+                  Positioned.fill(child: WeeklyAllDayDropTarget()),
+                  WeeklyAllDayEvents(),
                 ],
               ),
               WeeklyScheduledEvents(),

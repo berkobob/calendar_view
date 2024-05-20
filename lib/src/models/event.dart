@@ -1,6 +1,6 @@
 import 'task.dart';
 
-class CVEvent extends CVTask implements Comparable {
+class CVEvent extends Task implements Comparable {
   final String? id;
   final String? description;
   bool isAllDay;
@@ -26,10 +26,12 @@ class CVEvent extends CVTask implements Comparable {
         description = json['description'],
         isAllDay = json['start']['date'] != null,
         start =
-            DateTime.parse(json['start']['date'] ?? json['start']['dateTime']),
+            DateTime.parse(json['start']['date'] ?? json['start']['dateTime'])
+                .toLocal(),
         location = json['location'],
         colorId = json['colorId'],
-        end = DateTime.parse(json['end']['date'] ?? json['end']['dateTime']),
+        end = DateTime.parse(json['end']['date'] ?? json['end']['dateTime'])
+            .toLocal(),
         calendar = json['calendar'],
         super(summary: json['summary'] ?? 'Private Event') {
     if (json['recurrence'] case var rules? when rules is List) {

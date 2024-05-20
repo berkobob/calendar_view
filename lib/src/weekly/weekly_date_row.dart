@@ -1,3 +1,4 @@
+import 'package:calendar_view/src/weekly/weely_all_day_events/weekly_all_day_drop_target.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
