@@ -1,4 +1,3 @@
-import 'package:calendar_view/src/weekly/weely_all_day_events/weekly_all_day_drop_target.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -45,7 +44,15 @@ class WeeklyDateRow extends StatelessWidget with WatchItMixin {
           .map((today) => Expanded(
                 flex: 2,
                 child: Container(
+                  padding: const EdgeInsets.all(6.0),
                   margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                  decoration: today.isSameDate(DateTime.now())
+                      ? BoxDecoration(
+                          color: Colors.red[100],
+                          shape: BoxShape.circle,
+                        )
+                      // border: Border.all(color: Colors.red[100], width: 2.0))
+                      : null,
                   child: Container(
                     decoration: BoxDecoration(border: border),
                     child: Column(
@@ -53,7 +60,6 @@ class WeeklyDateRow extends StatelessWidget with WatchItMixin {
                         children: [
                           Text('${DaysOfWeek.values[today.weekday]}',
                               softWrap: false, overflow: TextOverflow.fade),
-                          const SizedBox(height: 3.0),
                           Text(
                             '${today.day}',
                             softWrap: false,

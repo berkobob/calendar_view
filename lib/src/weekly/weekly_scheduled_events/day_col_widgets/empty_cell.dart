@@ -23,7 +23,7 @@ class EmptyCell extends StatelessWidget {
     Border? border = Border.all(color: Colors.grey[200]!);
     return DragTarget<Task>(
       onWillAcceptWithDetails: (task) {
-        if (task.data case CVEvent event) {
+        if (task.data case Event event) {
           if (event.isAllDay &&
               event.end.difference(event.start).inDays.abs() > 1) {
             return false;
@@ -33,7 +33,7 @@ class EmptyCell extends StatelessWidget {
         return true;
       },
       onAcceptWithDetails: (task) {
-        CVEvent? was = task.data is CVEvent ? task.data as CVEvent : null;
+        Event? was = task.data is Event ? task.data as Event : null;
         final dateTime = date.add(Duration(hours: hour));
         final duration = was != null && !was.isAllDay
             ? was.end.difference(was.start).inMinutes.abs()
@@ -48,7 +48,7 @@ class EmptyCell extends StatelessWidget {
         json['end'] = json['start'].add(Duration(minutes: duration));
         json['isAllDay'] = false;
         json['calendar'] = 'Default calendar';
-        wc.addEvent(was: was, newEvent: CVEvent.fromMap(json));
+        wc.addEvent(was: was, newEvent: Event.fromMap(json));
         border = Border.all(color: Colors.pink, width: 2.0);
       },
       onLeave: (data) => border = Border.all(color: Colors.grey[200]!),

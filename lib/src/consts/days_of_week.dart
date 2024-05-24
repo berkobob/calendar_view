@@ -1,12 +1,12 @@
 enum DaysOfWeek {
   notUsedMondayIs1,
-  monday,
-  tuesday,
-  wednesday,
-  thursday,
-  friday,
-  saturday,
-  sunday;
+  mon,
+  tues,
+  wed,
+  thur,
+  fri,
+  sat,
+  sun;
 
   @override
   String toString() =>

@@ -65,13 +65,11 @@ class WeeklyController with ChangeNotifier {
       (eventsController.initDate.difference(date).inDays / 7).floor().abs() - 1;
 
   void _getAllDayEvents() {
-    final allDayEventsThisWeek = eventsController.allDayEvents
-        .where((event) =>
-            event.start.isBefore(monday.add(const Duration(days: 7))) &&
-            event.end.isAfter(monday))
-        .map((event) => AllDayEvent(event))
-        .toList()
-      ..sort();
+    final sunday = monday.add(const Duration(days: 7));
+    final allDayEventsThisWeek = eventsController
+        .allDayEventsBetween(monday, sunday)
+        .map((e) => AllDayEvent(e))
+        .toList();
 
     List<AllDayEvent> row = [];
     int day = 1;
@@ -121,9 +119,10 @@ class WeeklyController with ChangeNotifier {
   void _getScheduledEvents() {
     scheduledEvents = List.generate(
         7,
-        (day) => eventsController.scheduledEvents
-            .where((event) =>
-                event.start.isSameDate(monday.add(Duration(days: day))))
+        (day) => eventsController
+            .scheduledEventsOn(monday.add(Duration(days: day)))
+            //         .where((event) =>
+            //             event.start.isSameDate(monday.add(Duration(days: day))))
             .map((event) => ScheduledEvent(event))
             .toList()
           ..sort());
@@ -136,7 +135,7 @@ class WeeklyController with ChangeNotifier {
     notifyListeners();
   }
 
-  void addEvent({CVEvent? was, required CVEvent newEvent}) {
+  void addEvent({Event? was, required Event newEvent}) {
     if (was != null) {
       eventsController.remove(was);
       was.isAllDay
@@ -145,14 +144,14 @@ class WeeklyController with ChangeNotifier {
               .removeWhere((e) => e.event == was);
     }
 
-    EventsController.events.add([newEvent]);
+    EventsController.msg(AddEvent(newEvent));
 
     newEvent.isAllDay ? _getAllDayEvents() : _getScheduledEvents();
 
     notifyListeners();
   }
 
-  void setDuration(CVEvent event, {required double duration}) {
+  void setDuration(Event event, {required double duration}) {
     final mins = (duration / 15).round() * 15;
     final e = eventsController.firstWhere((e) => e == event);
     e.end = e.start.add(Duration(minutes: mins));

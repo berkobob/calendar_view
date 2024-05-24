@@ -31,8 +31,8 @@ class WeeklyAllDayDropTarget extends StatelessWidget {
               },
               onLeave: (data) => border[day] = null,
               onWillAcceptWithDetails: (task) {
-                if (task.data is CVEvent) {
-                  final event = task.data as CVEvent;
+                if (task.data is Event) {
+                  final event = task.data as Event;
                   if (event.isAllDay && event.start.weekday - 1 == day) {
                     return false;
                   }
@@ -41,8 +41,7 @@ class WeeklyAllDayDropTarget extends StatelessWidget {
                 return true;
               },
               onAcceptWithDetails: (task) {
-                CVEvent? was =
-                    task.data is CVEvent ? task.data as CVEvent : null;
+                Event? was = task.data is Event ? task.data as Event : null;
 
                 Map<String, dynamic> json = was != null
                     ? was.toMap
@@ -52,7 +51,7 @@ class WeeklyAllDayDropTarget extends StatelessWidget {
                 json['end'] = wc.monday.add(Duration(days: day + 1));
                 json['isAllDay'] = true;
                 json['calendar'] = 'Default calendar';
-                wc.addEvent(was: was, newEvent: CVEvent.fromMap(json));
+                wc.addEvent(was: was, newEvent: Event.fromMap(json));
                 border[day] = null;
               }),
         ),

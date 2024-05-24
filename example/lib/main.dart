@@ -14,7 +14,7 @@ class AppScrollBehavior extends MaterialScrollBehavior {
       };
 }
 
-List<CVEvent> allEvents = [];
+List<Event> allEvents = [];
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,32 +38,20 @@ void main() {
                   ConnectionState.none ||
                   ConnectionState.active =>
                     const Center(child: CircularProgressIndicator()),
-                  ConnectionState.done =>
-                    MainView(events: snapshot.data as List<CVEvent>),
+                  ConnectionState.done => MainView(events: snapshot.data ?? []),
                 }),
       ),
     ),
   );
 
-  Future.delayed(const Duration(seconds: 5), () {
-    EventsController.events.add(allEvents);
-  });
-
-  Future.delayed(const Duration(seconds: 10), () {
-    debugPrint('Lets try this');
-    EventsController.events.add([
-      CVEvent(
-          summary: 'IT WORKED',
-          isAllDay: false,
-          start: DateTime(2024, 03, 07, 08),
-          end: DateTime(2024, 03, 07, 09))
-    ]);
-  });
+  // Future.delayed(const Duration(seconds: 1), () {
+  //   EventsController.msg(AddEvents(allEvents));
+  // });
 }
 
 class MainView extends StatelessWidget {
   const MainView({super.key, required this.events});
-  final List<CVEvent> events;
+  final List<Event> events;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +71,7 @@ class MainView extends StatelessWidget {
           flex: 7,
           child: CVCalendar(
             view: CalendarView.weekly,
-            // events: events,
+            initEvents: events,
             initDate: DateTime(2024, 3, 4),
             showAppBar: true,
             autoScroll: true,
@@ -120,14 +108,14 @@ class DraggableTask extends StatelessWidget {
   }
 }
 
-Future<List<CVEvent>> loadData() async {
+Future<List<Event>> loadData() async {
   final data = await rootBundle.loadString('assets/data.json');
   final json = jsonDecode(data);
-  return json['items']
-      .where((x) => x['status'] == 'confirmed')
-      .map<CVEvent>((x) {
+  final confirmed = json['items'].where((x) => x['status'] == 'confirmed');
+  final events = confirmed.map<Event>((x) {
     x['calendar'] = 'Test Calendar';
-    return CVEvent.fromJson(x);
+    return Event.fromJson(x);
   }).toList()
     ..sort();
+  return events;
 }
