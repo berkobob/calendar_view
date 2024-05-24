@@ -24,9 +24,9 @@ class RecurrenceRule {
     required this.byDay,
   });
 
-  factory RecurrenceRule.fromString(List rrules) {
-    final String rrule =
-        rrules.firstWhere((s) => s.contains('RRULE:')).replaceAll('RRULE:', '');
+  factory RecurrenceRule.fromString(String rrule) {
+    // final String rrule =
+    //     rrules.firstWhere((s) => s.contains('RRULE:')).replaceAll('RRULE:', '');
 
     Map<String, String> parts = {};
     for (var part in rrule.split(';')) {
@@ -48,15 +48,19 @@ class RecurrenceRule {
           ? parts['BYMONTHDAY']!.split(',').map(int.parse).toList()
           : [],
       byDay: parts.containsKey('BYDAY')
-          ? parts['BYDAY']!
-              .split(',')
-              .map((d) => _dayOfWeekFromString(d))
-              .toList()
+          ? parts['BYDAY']!.split(',').map((d) {
+              try {
+                return _dayOfWeekFromString(d);
+              } catch (e) {
+                throw ArgumentError('Invalid day: $d\nRule $rrule');
+              }
+            }).toList()
           : [],
     );
   }
 
-  static int _dayOfWeekFromString(String day) {
+  static int _dayOfWeekFromString(String dayString) {
+    final day = dayString.length == 3 ? dayString.substring(1) : dayString;
     switch (day) {
       case 'MO':
         return DateTime.monday;
@@ -127,15 +131,15 @@ class RecurrenceRule {
   }
 }
 
-void main() {
-  String rruleString = "FREQ=YEARLY;INTERVAL=1;BYMONTH=1;BYMONTHDAY=1";
+// void main() {
+//   String rruleString = "FREQ=YEARLY;INTERVAL=1;BYMONTH=1;BYMONTHDAY=1";
 
-  RecurrenceRule rule = RecurrenceRule.fromString(['RRULE:$rruleString']);
+//   RecurrenceRule rule = RecurrenceRule.fromString(['RRULE:$rruleString']);
 
-  DateTime startDate = DateTime(2025, 1, 1); // Start date in the future
-  List<DateTime> occurrences = rule._generateOccurrences(startDate);
+//   DateTime startDate = DateTime(2025, 1, 1); // Start date in the future
+//   List<DateTime> occurrences = rule._generateOccurrences(startDate);
 
-  for (var date in occurrences) {
-    print(date);
-  }
-}
+//   for (var date in occurrences) {
+//     print(date);
+//   }
+// }

@@ -1,4 +1,5 @@
-import '../services/recurrence_rule.dart';
+import '../consts/event_status.dart';
+import '../consts/event_type.dart';
 import 'task.dart';
 
 class Event extends Task implements Comparable {
@@ -10,21 +11,26 @@ class Event extends Task implements Comparable {
   String? colorId;
   DateTime end;
   final String? calendar;
-  final RecurrenceRule? recurrenceRule;
+  bool recurring;
+  EventStatus status;
+  EventType? eventType;
 
-  Event(
-      {this.id,
-      required super.summary,
-      this.description,
-      required this.isAllDay,
-      required this.start,
-      this.location,
-      this.colorId,
-      required this.end,
-      this.calendar,
-      this.recurrenceRule});
+  Event({
+    this.id,
+    required super.summary,
+    this.description,
+    required this.isAllDay,
+    required this.start,
+    this.location,
+    this.colorId,
+    required this.end,
+    this.calendar,
+    required this.recurring,
+    required this.status,
+    required this.eventType,
+  });
 
-  Event.fromJson(Map<String, dynamic> json)
+  Event.fromJson(Map<String, dynamic> json, {required this.calendar})
       : id = json['id'],
         description = json['description'],
         isAllDay = json['start']['date'] != null,
@@ -35,13 +41,23 @@ class Event extends Task implements Comparable {
         colorId = json['colorId'],
         end = DateTime.parse(json['end']['date'] ?? json['end']['dateTime'])
             .toLocal(),
-        calendar = json['calendar'],
-        recurrenceRule = json.containsKey('recurrence')
-            ? RecurrenceRule.fromString(json['recurrence'] as List)
-            : null,
-        super(summary: json['summary'] ?? 'Private Event') {
-    recurrenceRule?.occurences(start: start, end: end);
-  }
+        recurring = json.containsKey('recurrence'),
+        eventType = switch (json['eventType'] as String?) {
+          'default' => EventType.event,
+          'outOfOffice' => EventType.outOfOffice,
+          'focusTime' => EventType.focusTime,
+          'workingLocation' => EventType.workingLocation,
+          'fromGmail' => EventType.fromGmail,
+          null => null,
+          Object() => null
+        },
+        status = switch (json['status'] as String) {
+          'confirmed' => EventStatus.confirmed,
+          'tentative' => EventStatus.tentative,
+          'cancelled' => EventStatus.cancelled,
+          String() => throw 'Unknown event status: $json'
+        },
+        super(summary: json['summary'] ?? 'Private Event');
 
   Map<String, dynamic> get toMap => {
         'id': id,
@@ -53,7 +69,9 @@ class Event extends Task implements Comparable {
         'colorId': colorId,
         'end': end,
         'calendar': calendar,
-        'recurrence': recurrenceRule
+        'recurring': recurring,
+        'status': status,
+        'eventType': eventType,
       };
 
   Event.fromMap(Map<String, dynamic> json)
@@ -65,7 +83,9 @@ class Event extends Task implements Comparable {
         colorId = json['colorId'],
         end = json['end'],
         calendar = json['calendar'],
-        recurrenceRule = json['recurrence'],
+        recurring = json['recurring'],
+        status = json['status'],
+        eventType = json['eventType'],
         super(summary: json['summary']);
 
   @override

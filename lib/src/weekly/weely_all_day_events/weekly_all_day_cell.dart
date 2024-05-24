@@ -50,13 +50,14 @@ class WeeklyAllDayEventCell extends StatelessWidget {
             right: Radius.circular(allDayEvent.overflow > 0 ? 0 : 10.0),
           ),
           border: Border(
-            top: const BorderSide(),
-            bottom: const BorderSide(),
+            top: const BorderSide(width: 0.5),
+            bottom: const BorderSide(width: 0.5),
             left: allDayEvent.underflow > 0
                 ? BorderSide.none
-                : const BorderSide(),
-            right:
-                allDayEvent.overflow > 0 ? BorderSide.none : const BorderSide(),
+                : const BorderSide(width: 0.5),
+            right: allDayEvent.overflow > 0
+                ? BorderSide.none
+                : const BorderSide(width: 0.5),
           ),
           color: Colors.amber[200]),
       child: Row(

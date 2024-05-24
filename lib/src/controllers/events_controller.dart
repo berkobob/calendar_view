@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:calendar_view/src/consts/same_date_ext.dart';
+import '../consts/same_date_ext.dart';
 
 import '../models/models.dart';
 
@@ -49,39 +49,10 @@ class EventsController {
     _updateStream.sink.add(null);
   }
 
-  Iterable<Event> allDayEventsBetween(DateTime from, DateTime to) {
-    return allDayEvents.where((event) {
-      if (event.recurrenceRule == null) {
-        if (event.start.isBefore(to) && event.end.isAfter(from)) {
-          return true;
-        } else {
-          return false;
-        }
-      }
+  Iterable<Event> allDayEventsBetween(DateTime from, DateTime to) =>
+      allDayEvents.where(
+          (event) => event.start.isBefore(to) && event.end.isAfter(from));
 
-      for (var date in event.recurrenceRule!.previousDates) {
-        if (date.$1.isBefore(to) && date.$2.isAfter(from)) {
-          event.start = date.$1;
-          event.end = date.$2;
-          return true;
-        }
-      }
-      return false;
-    });
-  }
-
-  Iterable<Event> scheduledEventsOn(DateTime date) {
-    return scheduledEvents.where((event) {
-      if (event.recurrenceRule == null) {
-        return (event.start.isSameDate(date) || event.end.isSameDate(date));
-      }
-
-      for (var occurrence in event.recurrenceRule!.previousDates) {
-        if (occurrence.$1.isSameDate(date) || occurrence.$2.isSameDate(date)) {
-          return true;
-        }
-      }
-      return false;
-    });
-  }
+  Iterable<Event> scheduledEventsOn(DateTime date) => scheduledEvents.where(
+      (event) => (event.start.isSameDate(date) || event.end.isSameDate(date)));
 }
