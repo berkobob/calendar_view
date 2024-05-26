@@ -112,10 +112,9 @@ Future<List<Event>> loadData() async {
   final data = await rootBundle.loadString('assets/data.json');
   final json = jsonDecode(data);
   final confirmed = json['items'].where((x) => x['status'] == 'confirmed');
-  final events = confirmed.map<Event>((x) {
-    x['calendar'] = 'Test Calendar';
-    return Event.fromJson(x);
-  }).toList()
+  final events = confirmed
+      .map<Event>((x) => Event.fromJson(x, calendar: 'Test Calendar'))
+      .toList()
     ..sort();
   return events;
 }

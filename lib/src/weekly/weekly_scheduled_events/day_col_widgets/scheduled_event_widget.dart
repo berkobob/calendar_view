@@ -16,13 +16,17 @@ class ScheduledEventWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('${event.summary} : ${event.duration} - $duration');
+
     return SizedBox(
       width: width,
       height: duration,
       child: Container(
-        padding: const EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+        padding: duration > 15.0
+            ? const EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0)
+            : const EdgeInsets.fromLTRB(3.0, 0.0, 3.0, 0.0),
         decoration: BoxDecoration(
-          color: Colors.amber[200],
+          color: event.event.colorId != null ? Color(event.event.color) : null,
           border: Border.all(color: Colors.grey[500]!),
           borderRadius: const BorderRadius.all(Radius.elliptical(5.0, 7.5)),
         ),
@@ -60,6 +64,10 @@ class ScheduledEventWidget extends StatelessWidget {
     );
   }
 
-  double factor(double duration) =>
-      switch (duration) { <= 15 => 0.45, <= 30 => 1.0, <= 45 => 0.9, _ => 1.0 };
+  double factor(double duration) => switch (duration) {
+        <= 15 => 0.674,
+        <= 30 => 1.0,
+        <= 45 => 0.9,
+        _ => 1.0
+      };
 }

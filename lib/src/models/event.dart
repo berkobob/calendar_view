@@ -8,9 +8,9 @@ class Event extends Task implements Comparable {
   bool isAllDay;
   DateTime start;
   final String? location;
-  String? colorId;
+  String? colorId = '';
   DateTime end;
-  final String? calendar;
+  final String calendar;
   bool recurring;
   EventStatus status;
   EventType? eventType;
@@ -24,11 +24,13 @@ class Event extends Task implements Comparable {
     this.location,
     this.colorId,
     required this.end,
-    this.calendar,
+    required this.calendar,
     required this.recurring,
     required this.status,
     required this.eventType,
   });
+
+  int get color => int.parse(colorId!.replaceFirst('#', 'ff'), radix: 16);
 
   Event.fromJson(Map<String, dynamic> json, {required this.calendar})
       : id = json['id'],

@@ -1,5 +1,3 @@
-import 'package:week_of_year/date_week_extensions.dart';
-
 class RecurrenceRule {
   final String frequency;
   final int interval;
