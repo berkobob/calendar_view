@@ -16,8 +16,6 @@ class ScheduledEventWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('${event.summary} : ${event.duration} - $duration');
-
     return SizedBox(
       width: width,
       height: duration,

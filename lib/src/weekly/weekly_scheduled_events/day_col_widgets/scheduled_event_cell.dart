@@ -58,7 +58,7 @@ class _ScheduledEventCellState extends State<ScheduledEventCell> {
             ),
             child: MouseRegion(
               cursor: SystemMouseCursors.grab,
-              onEnter: (event) => debugPrint('${widget.event.event}'),
+              // onEnter: (event) => debugPrint('${widget.event.event}'),
               child: ScheduledEventWidget(
                 width: width,
                 duration: duration,

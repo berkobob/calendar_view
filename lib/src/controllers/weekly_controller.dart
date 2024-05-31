@@ -36,13 +36,14 @@ class WeeklyController with ChangeNotifier {
     notifyListeners();
   }
 
-  final PageController pageController = PageController();
+  late final PageController pageController;
 
   WeeklyController(
       {required this.showAppBar,
       required this.showTimeLine,
       required this.autoScroll}) {
-    // _monday = DateTime(_monday.year, _monday.month, _monday.day);
+    pageController =
+        PageController(initialPage: pageNumberFromDate(DateTime.now()));
     pageController.addListener(() {
       switch (pageController.page) {
         case (double page) when (page % 1.0 == 0.0):
@@ -62,7 +63,7 @@ class WeeklyController with ChangeNotifier {
       eventsController.initDate.weekOfYear + pageNumber);
 
   int pageNumberFromDate(DateTime date) =>
-      (eventsController.initDate.difference(date).inDays / 7).floor().abs() - 1;
+      (eventsController.initDate.difference(date).inDays / 7).floor().abs();
 
   void _getAllDayEvents() {
     final sunday = monday.add(const Duration(days: 7));
