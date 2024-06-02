@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -82,13 +83,23 @@ class AppBarTitleCell extends StatelessWidget with WatchItMixin {
     final end = start.add(const Duration(days: 6));
 
     if (start.month == end.month) {
-      return Text('${MonthNames.values[start.month]}, ${start.year}');
+      return AutoSizeText(
+        '${MonthNames.values[start.month]}, ${start.year}',
+        minFontSize: 6.0,
+        maxFontSize: 20.0,
+      );
     }
     if (start.year == end.year) {
-      return Text(
-          '${MonthNames.values[start.month]} - ${MonthNames.values[end.month]}, ${start.year}');
+      return AutoSizeText(
+        '${MonthNames.values[start.month]} - ${MonthNames.values[end.month]}, ${start.year}',
+        minFontSize: 6.0,
+        maxFontSize: 20.0,
+      );
     }
-    return Text(
-        '${MonthNames.values[start.month]}, ${start.year} - ${MonthNames.values[end.month]}, ${end.year}');
+    return AutoSizeText(
+      '${MonthNames.values[start.month]}, ${start.year} - ${MonthNames.values[end.month]}, ${end.year}',
+      minFontSize: 6.0,
+      maxFontSize: 20.0,
+    );
   }
 }
