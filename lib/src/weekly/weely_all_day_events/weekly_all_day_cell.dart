@@ -76,7 +76,12 @@ class WeeklyAllDayEventCell extends StatelessWidget {
                     allDayEvent.summary)
                   Transform.scale(
                     scale: 0.75,
-                    child: Checkbox(value: false, onChanged: (_) {}),
+                    child: Checkbox(
+                      value: false,
+                      onChanged: (_) {},
+                      visualDensity:
+                          const VisualDensity(horizontal: -4.0, vertical: -4.0),
+                    ),
                   ),
                 Expanded(
                   child: Text(
