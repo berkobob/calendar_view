@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -45,7 +46,7 @@ class WeeklyDateRow extends StatelessWidget with WatchItMixin {
                 flex: 2,
                 child: Container(
                   padding: const EdgeInsets.all(6.0),
-                  margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 6.0),
                   decoration: today.isSameDate(DateTime.now())
                       ? BoxDecoration(
                           color: Colors.red[100],
@@ -58,13 +59,22 @@ class WeeklyDateRow extends StatelessWidget with WatchItMixin {
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text('${DaysOfWeek.values[today.weekday]}',
-                              softWrap: false, overflow: TextOverflow.fade),
+                          // AutoSizeText(
                           Text(
+                            '${DaysOfWeek.values[today.weekday]}',
+                            softWrap: false,
+                            overflow: TextOverflow.clip,
+                            style: const TextStyle(fontSize: 12.0),
+                            // maxFontSize: 12,
+                            // minFontSize: 4,
+                          ),
+                          AutoSizeText(
                             '${today.day}',
                             softWrap: false,
                             overflow: TextOverflow.fade,
                             style: const TextStyle(fontSize: 20.0),
+                            maxFontSize: 20,
+                            minFontSize: 4,
                           ),
                         ]),
                   ),
