@@ -44,7 +44,8 @@ class WeeklyAllDayEventCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 1.0),
+      height: 22.0,
+      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 0.0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.horizontal(
             left: Radius.circular(allDayEvent.underflow > 0 ? 0 : 10.0),

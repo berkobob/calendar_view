@@ -27,6 +27,7 @@ class WeeklyAllDayEvents extends StatelessWidget with WatchItMixin {
             child: IconButton(
               onPressed: () => wc.setShowAllDayEvents(true),
               icon: const Icon(Icons.expand_more),
+              visualDensity: const VisualDensity(horizontal: -4.0),
             ),
           ),
           if (events.isNotEmpty)
@@ -47,6 +48,7 @@ class WeeklyAllDayEvents extends StatelessWidget with WatchItMixin {
                           child: IconButton(
                             onPressed: () => wc.setShowAllDayEvents(false),
                             icon: const Icon(Icons.expand_less),
+                            visualDensity: const VisualDensity(vertical: -4.0),
                           ),
                         )
                       : const Spacer(),
