@@ -21,7 +21,7 @@ class EmptyCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final wc = di.get<WeeklyController>();
     Border? border = Border.all(color: Colors.grey[200]!);
-    return DragTarget<Task>(
+    return DragTarget<Item>(
       onWillAcceptWithDetails: (task) {
         if (task.data case Event event) {
           if (event.isAllDay &&

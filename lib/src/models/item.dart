@@ -1,6 +1,6 @@
-class Task {
+class Item {
   String summary;
-  Task({required this.summary});
+  Item({required this.summary});
 
   @override
   String toString() => summary;

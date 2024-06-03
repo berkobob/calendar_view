@@ -1,8 +1,8 @@
 import '../consts/event_status.dart';
 import '../consts/event_type.dart';
-import 'task.dart';
+import 'item.dart';
 
-class Event extends Task implements Comparable {
+class Event extends Item implements Comparable {
   final String? id;
   final String? description;
   bool isAllDay;
@@ -85,9 +85,9 @@ class Event extends Task implements Comparable {
         colorId = json['colorId'],
         end = json['end'],
         calendar = json['calendar'],
-        recurring = json['recurring'],
-        status = json['status'],
-        eventType = json['eventType'],
+        recurring = json['recurring'] ?? false,
+        status = json['status'] ?? EventStatus.confirmed,
+        eventType = json['eventType'] ?? EventType.event,
         super(summary: json['summary']);
 
   @override

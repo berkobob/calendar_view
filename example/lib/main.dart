@@ -59,15 +59,15 @@ class MainView extends StatelessWidget {
     allEvents = events;
     return Row(
       children: [
-        // Expanded(
-        //     flex: 1,
-        //     child: ListView(children: const [
-        //       DraggableTask(task: 'Task no 1'),
-        //       DraggableTask(task: 'Task no 2'),
-        //       DraggableTask(task: 'Task no 3'),
-        //       DraggableTask(task: 'Task no 4'),
-        //       DraggableTask(task: 'Task no 5'),
-        //     ])),
+        Expanded(
+            flex: 1,
+            child: ListView(children: const [
+              DraggableTask(task: 'Task no 1'),
+              DraggableTask(task: 'Task no 2'),
+              DraggableTask(task: 'Task no 3'),
+              DraggableTask(task: 'Task no 4'),
+              DraggableTask(task: 'Task no 5'),
+            ])),
         Expanded(
           flex: 7,
           child: CVCalendar(
@@ -91,8 +91,8 @@ class DraggableTask extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget child = ListTile(title: Text(task));
-    return Draggable<Task>(
-        data: Task(summary: task),
+    return Draggable<Item>(
+        data: Item(summary: task),
         feedback: ConstrainedBox(
             constraints: BoxConstraints.loose(const Size(150, 75)),
             child: Opacity(

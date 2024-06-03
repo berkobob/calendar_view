@@ -19,7 +19,7 @@ class WeeklyAllDayDropTarget extends StatelessWidget {
         7,
         (day) => Expanded(
           flex: 2,
-          child: DragTarget<Task>(
+          child: DragTarget<Item>(
               builder: (context, _, __) {
                 return Container(
                   decoration: BoxDecoration(

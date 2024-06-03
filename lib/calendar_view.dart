@@ -37,7 +37,7 @@ library calendar_view;
 export 'src/consts/constants.dart';
 export 'src/weekly/weekly_view.dart';
 export 'src/models/event.dart';
-export 'src/models/task.dart';
+export 'src/models/item.dart';
 export 'src/models/events_messages.dart';
 export 'src/main.dart';
 export 'src/controllers/events_controller.dart';
