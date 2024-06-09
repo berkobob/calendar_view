@@ -153,8 +153,10 @@ class WeeklyController with ChangeNotifier {
   }
 
   void setDuration(Event event, {required double duration}) {
+    print('Updating $event');
     final mins = (duration / 15).round() * 15;
     final e = eventsController.firstWhere((e) => e == event);
     e.end = e.start.add(Duration(minutes: mins));
+    print('To $e');
   }
 }
