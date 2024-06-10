@@ -8,12 +8,24 @@ import 'weekly_scheduled_events/weekly_scheduled_events.dart';
 import 'weely_all_day_events/weekly_all_day_drop_target.dart';
 import 'weely_all_day_events/weekly_all_day_events.dart';
 
-class WeeklyView extends StatelessWidget {
+class WeeklyView extends StatelessWidget with WatchItMixin {
   const WeeklyView({super.key});
 
   @override
   Widget build(BuildContext context) {
     final wc = di.get<WeeklyController>();
+
+    registerChangeNotifierHandler(
+        handler: (context, WeeklyController value, cancel) {
+      if (value.snackbarMessage != null) {
+        SnackBar snackbar = SnackBar(
+          content: Text(value.snackbarMessage!),
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(snackbar);
+        value.snackbarMessage = null;
+      }
+    });
 
     return Scaffold(
       appBar: wc.showAppBar ? const WeeklyAppBar() : null,

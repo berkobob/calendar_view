@@ -21,34 +21,29 @@ class EmptyCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final wc = di.get<WeeklyController>();
     Border? border = Border.all(color: Colors.grey[200]!);
-    return DragTarget<Item>(
-      onWillAcceptWithDetails: (task) {
-        if (task.data case Event event) {
-          if (event.isAllDay &&
-              event.end.difference(event.start).inDays.abs() > 1) {
-            return false;
-          }
+    return DragTarget<Event>(
+      onWillAcceptWithDetails: (item) {
+        final event = item.data;
+        if (event.isAllDay &&
+            event.end.difference(event.start).inDays.abs() > 1) {
+          return false;
         }
         border = Border.all(color: Colors.pink, width: 2.0);
         return true;
       },
-      onAcceptWithDetails: (task) {
-        Event? was = task.data is Event ? task.data as Event : null;
+      onAcceptWithDetails: (item) {
         final dateTime = date.add(Duration(hours: hour));
-        final duration = was != null && !was.isAllDay
-            ? was.end.difference(was.start).inMinutes.abs()
+        final duration = !item.data.isAllDay
+            ? item.data.end.difference(item.data.start).inMinutes.abs()
             : start == 0
                 ? 60
                 : start;
 
-        Map<String, dynamic> json =
-            was != null ? was.toMap : {'summary': '☐ ${task.data.summary}'};
-
-        json['start'] = dateTime;
-        json['end'] = json['start'].add(Duration(minutes: duration));
-        json['isAllDay'] = false;
-        json['calendar'] = 'Default calendar';
-        wc.addEvent(was: was, newEvent: Event.fromMap(json));
+        Event event = item.data.copyWith(
+            start: dateTime,
+            end: dateTime.add(Duration(minutes: duration)),
+            isAllDay: false);
+        wc.addEvent(event);
         border = Border.all(color: Colors.pink, width: 2.0);
       },
       onLeave: (data) => border = Border.all(color: Colors.grey[200]!),

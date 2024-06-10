@@ -11,6 +11,7 @@ class WeeklyController with ChangeNotifier {
   final bool showAppBar;
   final bool showTimeLine;
   final bool autoScroll;
+  String? snackbarMessage;
 
   final eventsController = di.get<EventsController>();
 
@@ -136,27 +137,28 @@ class WeeklyController with ChangeNotifier {
     notifyListeners();
   }
 
-  void addEvent({Event? was, required Event newEvent}) {
-    if (was != null) {
-      eventsController.remove(was);
-      was.isAllDay
-          ? _getAllDayEvents()
-          : scheduledEvents[was.start.weekday - 1]
-              .removeWhere((e) => e.event == was);
+  void addEvent(Event event) {
+    if (event.id != null) {
+      eventsController.removeWhere((e) => e.id == event.id);
+      EventsController.pubEventChanges(event);
+      snackbarMessage = '${event.summary} moved to ${event.calendar}';
+    } else {
+      event.id = '${Object.hash(event.summary, event.start)}';
+      snackbarMessage = '${event.summary} added to ${event.calendar}';
     }
 
-    EventsController.msg(AddEvent(newEvent));
-
-    newEvent.isAllDay ? _getAllDayEvents() : _getScheduledEvents();
-
+    EventsController.msg(AddEvent(event));
+    event.isAllDay ? _getAllDayEvents() : _getScheduledEvents();
     notifyListeners();
   }
 
   void setDuration(Event event, {required double duration}) {
-    print('Updating $event');
     final mins = (duration / 15).round() * 15;
     final e = eventsController.firstWhere((e) => e == event);
     e.end = e.start.add(Duration(minutes: mins));
-    print('To $e');
+    EventsController.pubEventChanges(e);
+    snackbarMessage =
+        '${event.summary} set to ${duration.toInt()} minutes ending at ${event.end}';
+    notifyListeners();
   }
 }

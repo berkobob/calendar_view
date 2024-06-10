@@ -18,6 +18,9 @@ List<Event> allEvents = [];
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  EventsController.eventChanges.listen((event) {
+    debugPrint('Updated event: $event');
+  });
   runApp(
     MaterialApp(
       scrollBehavior: AppScrollBehavior(),
@@ -91,8 +94,17 @@ class DraggableTask extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget child = ListTile(title: Text(task));
-    return Draggable<Item>(
-        data: Item(summary: task),
+    final data = Event(
+        calendar: '',
+        start: DateTime.now(),
+        end: DateTime.now(),
+        summary: task,
+        isAllDay: true,
+        recurring: false,
+        eventType: EventType.focusTime,
+        status: EventStatus.confirmed);
+    return Draggable<Event>(
+        data: data,
         feedback: ConstrainedBox(
             constraints: BoxConstraints.loose(const Size(150, 75)),
             child: Opacity(
@@ -103,7 +115,7 @@ class DraggableTask extends StatelessWidget {
             )),
         childWhenDragging: const ListTile(),
         onDragEnd: (DraggableDetails details) => debugPrint(
-            'Drag ended with: ${details.wasAccepted}. Remove $child from list.'),
+            'Drag ended with: ${details.wasAccepted}. Remove ${child.hashCode} from list.'),
         // onDragCompleted: () => debugPrint('Drag completed of $child'),
         child: child);
   }

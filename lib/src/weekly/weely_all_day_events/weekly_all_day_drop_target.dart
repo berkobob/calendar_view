@@ -19,7 +19,7 @@ class WeeklyAllDayDropTarget extends StatelessWidget {
         7,
         (day) => Expanded(
           flex: 2,
-          child: DragTarget<Item>(
+          child: DragTarget<Event>(
               builder: (context, _, __) {
                 return Container(
                   decoration: BoxDecoration(
@@ -30,28 +30,20 @@ class WeeklyAllDayDropTarget extends StatelessWidget {
                 );
               },
               onLeave: (data) => border[day] = null,
-              onWillAcceptWithDetails: (task) {
-                if (task.data is Event) {
-                  final event = task.data as Event;
-                  if (event.isAllDay && event.start.weekday - 1 == day) {
-                    return false;
-                  }
+              onWillAcceptWithDetails: (event) {
+                if (event.data.isAllDay &&
+                    event.data.start.weekday - 1 == day) {
+                  return false;
                 }
-                border[day] = Border.all(color: Theme.of(context).primaryColor);
+                border[day] = Border.all(color: Colors.pink, width: 2.0);
                 return true;
               },
-              onAcceptWithDetails: (task) {
-                Event? was = task.data is Event ? task.data as Event : null;
-
-                Map<String, dynamic> json = was != null
-                    ? was.toMap
-                    : {'summary': '☐ ${task.data.summary}'};
-
-                json['start'] = wc.monday.add(Duration(days: day));
-                json['end'] = wc.monday.add(Duration(days: day + 1));
-                json['isAllDay'] = true;
-                json['calendar'] = 'Default calendar';
-                wc.addEvent(was: was, newEvent: Event.fromMap(json));
+              onAcceptWithDetails: (item) {
+                final event = item.data.copyWith();
+                event.start = wc.monday.add(Duration(days: day));
+                event.end = wc.monday.add(Duration(days: day + 1));
+                event.isAllDay = true;
+                wc.addEvent(event);
                 border[day] = null;
               }),
         ),

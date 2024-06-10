@@ -1,9 +1,9 @@
 import '../consts/event_status.dart';
 import '../consts/event_type.dart';
-import 'item.dart';
 
-class Event extends Item implements Comparable {
-  final String? id;
+class Event implements Comparable {
+  String? id;
+  String summary;
   final String? description;
   bool isAllDay;
   DateTime start;
@@ -17,7 +17,7 @@ class Event extends Item implements Comparable {
 
   Event({
     this.id,
-    required super.summary,
+    required this.summary,
     this.description,
     required this.isAllDay,
     required this.start,
@@ -30,10 +30,41 @@ class Event extends Item implements Comparable {
     required this.eventType,
   });
 
+  Event copyWith({
+    String? id,
+    String? summary,
+    String? description,
+    bool? isAllDay,
+    DateTime? start,
+    String? location,
+    String? colorId,
+    DateTime? end,
+    String? calendar,
+    bool? recurring,
+    EventStatus? status,
+    EventType? eventType,
+  }) {
+    return Event(
+      id: id ?? this.id,
+      summary: summary ?? this.summary,
+      description: description ?? this.description,
+      isAllDay: isAllDay ?? this.isAllDay,
+      start: start ?? this.start,
+      location: location ?? this.location,
+      colorId: colorId ?? this.colorId,
+      end: end ?? this.end,
+      calendar: calendar ?? this.calendar,
+      recurring: recurring ?? this.recurring,
+      status: status ?? this.status,
+      eventType: eventType ?? this.eventType,
+    );
+  }
+
   int get color => int.parse(colorId!.replaceFirst('#', 'ff'), radix: 16);
 
   Event.fromJson(Map<String, dynamic> json, {required this.calendar})
       : id = json['id'],
+        summary = json['summary'] ?? 'Private Event',
         description = json['description'],
         isAllDay = json['start']['date'] != null,
         start =
@@ -58,8 +89,7 @@ class Event extends Item implements Comparable {
           'tentative' => EventStatus.tentative,
           'cancelled' => EventStatus.cancelled,
           String() => throw 'Unknown event status: $json'
-        },
-        super(summary: json['summary'] ?? 'Private Event');
+        };
 
   Map<String, dynamic> get toMap => {
         'id': id,
@@ -78,6 +108,7 @@ class Event extends Item implements Comparable {
 
   Event.fromMap(Map<String, dynamic> json)
       : id = json['id'],
+        summary = json['summary'],
         description = json['description'],
         isAllDay = json['isAllDay'],
         start = json['start'],
@@ -87,8 +118,7 @@ class Event extends Item implements Comparable {
         calendar = json['calendar'],
         recurring = json['recurring'] ?? false,
         status = json['status'] ?? EventStatus.confirmed,
-        eventType = json['eventType'] ?? EventType.event,
-        super(summary: json['summary']);
+        eventType = json['eventType'] ?? EventType.event;
 
   @override
   String toString() =>
@@ -96,4 +126,18 @@ class Event extends Item implements Comparable {
 
   @override
   int compareTo(other) => start.compareTo(other.start);
+
+  // @override
+  // int get hashCode => Object.hash(id, summary, start, end, isAllDay, calendar);
+
+  // @override
+  // bool operator ==(Object other) {
+  //   if (other is! Event) return false;
+  //   return id == other.id &&
+  //       summary == other.summary &&
+  //       start == other.start &&
+  //       end == other.end &&
+  //       isAllDay == other.isAllDay &&
+  //       calendar == other.calendar;
+  // }
 }
