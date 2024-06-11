@@ -20,8 +20,6 @@ class EventsController {
   static get eventChanges => _pubEventChange.stream;
   static get pubEventChanges => _pubEventChange.add;
 
-  get temp => _events;
-
   final StreamController<dynamic> _updateStream =
       StreamController<dynamic>.broadcast();
 
@@ -43,7 +41,7 @@ class EventsController {
   Iterable<Event> get scheduledEvents =>
       _events.where((event) => !event.isAllDay);
 
-  void remove(Event event) => _events.remove(event);
+  bool remove(Event event) => _events.remove(event);
 
   Event firstWhere(bool Function(Event event) function) =>
       _events.firstWhere(function);

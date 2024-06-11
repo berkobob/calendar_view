@@ -19,8 +19,11 @@ List<Event> allEvents = [];
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   EventsController.eventChanges.listen((event) {
-    debugPrint('Updated event: $event');
+    event.id =
+        Object.hashAll([event.start, event.end, event.summary]).toString();
+    EventsController.msg(AddEvent(event));
   });
+
   runApp(
     MaterialApp(
       scrollBehavior: AppScrollBehavior(),
@@ -47,10 +50,6 @@ void main() {
       ),
     ),
   );
-
-  // Future.delayed(const Duration(seconds: 1), () {
-  //   EventsController.msg(AddEvents(allEvents));
-  // });
 }
 
 class MainView extends StatelessWidget {

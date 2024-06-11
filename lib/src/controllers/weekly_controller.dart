@@ -138,27 +138,21 @@ class WeeklyController with ChangeNotifier {
   }
 
   void addEvent(Event event) {
-    if (event.id != null) {
-      eventsController.removeWhere((e) => e.id == event.id);
-      EventsController.pubEventChanges(event);
-      snackbarMessage = '${event.summary} moved to ${event.calendar}';
-    } else {
-      event.id = '${Object.hash(event.summary, event.start)}';
-      snackbarMessage = '${event.summary} added to ${event.calendar}';
-    }
+    event.id != null
+        ? snackbarMessage = '${event.summary} moved to ${event.start}'
+        : snackbarMessage = '${event.summary} added to ${event.calendar}';
 
-    EventsController.msg(AddEvent(event));
+    print(eventsController.remove(event));
+    EventsController.pubEventChanges(event);
     event.isAllDay ? _getAllDayEvents() : _getScheduledEvents();
-    notifyListeners();
   }
 
   void setDuration(Event event, {required double duration}) {
     final mins = (duration / 15).round() * 15;
-    final e = eventsController.firstWhere((e) => e == event);
-    e.end = e.start.add(Duration(minutes: mins));
-    EventsController.pubEventChanges(e);
+    event.end = event.start.add(Duration(minutes: mins));
+    eventsController.remove(event);
+    EventsController.pubEventChanges(event);
     snackbarMessage =
         '${event.summary} set to ${duration.toInt()} minutes ending at ${event.end}';
-    notifyListeners();
   }
 }

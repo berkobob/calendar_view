@@ -127,13 +127,15 @@ class Event implements Comparable {
   @override
   int compareTo(other) => start.compareTo(other.start);
 
-  // @override
-  // int get hashCode => Object.hash(id, summary, start, end, isAllDay, calendar);
+  @override
+  int get hashCode => Object.hash(id, summary, start);
 
-  // @override
-  // bool operator ==(Object other) {
-  //   if (other is! Event) return false;
-  //   return id == other.id &&
+  @override
+  bool operator ==(Object other) {
+    if (other is! Event) return false;
+    return id == other.id;
+  }
+  // &&
   //       summary == other.summary &&
   //       start == other.start &&
   //       end == other.end &&
