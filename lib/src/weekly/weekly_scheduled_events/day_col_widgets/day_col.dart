@@ -13,7 +13,7 @@ class DayCol extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final date = di.get<WeeklyController>().monday.add(Duration(days: day));
-    final events = watchPropertyValue<WeeklyController, List<ScheduledEvent>>(
+    final events = watchPropertyValue<WeeklyController, List<CVEvent>>(
         (controller) => controller.scheduledEvents[date.weekday - 1]);
     watchPropertyValue<WeeklyController, int>(
         (controller) => controller.scheduledEvents[date.weekday - 1].length);
@@ -26,14 +26,13 @@ class DayCol extends StatelessWidget with WatchItMixin {
                 .where((event) => event.start.hour == hour)
                 .fold<int>(
                     0,
-                    (int start, ScheduledEvent event) =>
-                        event.start.minute > start
-                            ? event.start.minute
-                            : start);
+                    (int start, CVEvent event) => event.start.minute > start
+                        ? event.start.minute
+                        : start);
 
             final end = events.where((event) => event.end.hour == hour).fold(
                 0,
-                (int end, ScheduledEvent event) =>
+                (int end, CVEvent event) =>
                     event.end.minute > end ? event.end.minute : end);
 
             return EmptyCell(date: date, hour: hour, start: start, end: end);
@@ -45,7 +44,7 @@ class DayCol extends StatelessWidget with WatchItMixin {
   }
 
   List<Widget> drawEvents(
-      {required double width, required List<ScheduledEvent> events}) {
+      {required double width, required List<CVEvent> events}) {
     List<Widget> widgets = [];
     bool overlap = false;
     bool nextdoor = false;

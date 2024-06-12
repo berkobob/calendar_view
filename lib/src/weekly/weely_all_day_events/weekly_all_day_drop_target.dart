@@ -19,7 +19,7 @@ class WeeklyAllDayDropTarget extends StatelessWidget {
         7,
         (day) => Expanded(
           flex: 2,
-          child: DragTarget<Event>(
+          child: DragTarget<CVEvent>(
               builder: (context, _, __) {
                 return Container(
                   decoration: BoxDecoration(
@@ -39,10 +39,14 @@ class WeeklyAllDayDropTarget extends StatelessWidget {
                 return true;
               },
               onAcceptWithDetails: (item) {
-                final event = item.data.copyWith(
-                    start: wc.monday.add(Duration(days: day)),
-                    end: wc.monday.add(Duration(days: day + 1)),
-                    isAllDay: true);
+                final CVEvent event = item.data;
+                event.start = wc.monday.add(Duration(days: day));
+                event.end = wc.monday.add(Duration(days: day + 1));
+                event.isAllDay = true;
+                // final event = item.data.copyWith(
+                //     start: wc.monday.add(Duration(days: day)),
+                //     end: wc.monday.add(Duration(days: day + 1)),
+                //     isAllDay: true);
                 wc.addEvent(event);
                 border[day] = null;
               }),

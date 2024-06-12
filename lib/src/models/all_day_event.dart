@@ -1,12 +1,12 @@
-import 'event.dart';
+import 'event_interface.dart';
 
 class AllDayEvent implements Comparable {
   AllDayEvent([this.event])
       : duration =
             event != null ? event.end.difference(event.start).inDays.abs() : 0;
 
-  final Event? event;
-  int overflow = 0, underflow = 0, duration = 0;
+  final CVEvent? event;
+  int overflow = 0, underflow = 0, duration;
 
   set start(start) => event!.start = start;
   DateTime get start => event!.start;

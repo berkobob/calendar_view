@@ -5,6 +5,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'event.dart';
+
 class AppScrollBehavior extends MaterialScrollBehavior {
   @override
   Set<PointerDeviceKind> get dragDevices => {
@@ -14,7 +16,7 @@ class AppScrollBehavior extends MaterialScrollBehavior {
       };
 }
 
-List<Event> allEvents = [];
+List<CVEvent> allEvents = [];
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,7 +56,7 @@ void main() {
 
 class MainView extends StatelessWidget {
   const MainView({super.key, required this.events});
-  final List<Event> events;
+  final List<CVEvent> events;
 
   @override
   Widget build(BuildContext context) {
@@ -93,16 +95,16 @@ class DraggableTask extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget child = ListTile(title: Text(task));
-    final data = Event(
-        calendar: '',
-        start: DateTime.now(),
-        end: DateTime.now(),
-        summary: task,
-        isAllDay: true,
-        recurring: false,
-        eventType: EventType.focusTime,
-        status: EventStatus.confirmed);
-    return Draggable<Event>(
+    final data = CalendarEvent(
+      source: 'dummy task',
+      id: '${task.hashCode}',
+      calendar: '',
+      start: DateTime.now(),
+      end: DateTime.now(),
+      summary: task,
+      isAllDay: true,
+    );
+    return Draggable<CVEvent>(
         data: data,
         feedback: ConstrainedBox(
             constraints: BoxConstraints.loose(const Size(150, 75)),
@@ -120,12 +122,12 @@ class DraggableTask extends StatelessWidget {
   }
 }
 
-Future<List<Event>> loadData() async {
+Future<List<CVEvent>> loadData() async {
   final data = await rootBundle.loadString('assets/data.json');
   final json = jsonDecode(data);
   final confirmed = json['items'].where((x) => x['status'] == 'confirmed');
   final events = confirmed
-      .map<Event>((x) => Event.fromJson(x, calendar: 'Test Calendar'))
+      .map<CVEvent>((json) => CalendarEvent.fromJson(json))
       .toList()
     ..sort();
   return events;

@@ -21,7 +21,7 @@ class EmptyCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final wc = di.get<WeeklyController>();
     Border? border = Border.all(color: Colors.grey[200]!);
-    return DragTarget<Event>(
+    return DragTarget<CVEvent>(
       onWillAcceptWithDetails: (item) {
         final event = item.data;
         if (event.isAllDay &&
@@ -32,17 +32,21 @@ class EmptyCell extends StatelessWidget {
         return true;
       },
       onAcceptWithDetails: (item) {
+        final CVEvent event = item.data;
         final dateTime = date.add(Duration(hours: hour));
-        final duration = !item.data.isAllDay
+        final duration = !event.isAllDay
             ? item.data.end.difference(item.data.start).inMinutes.abs()
             : start == 0
                 ? 60
                 : start;
 
-        Event event = item.data.copyWith(
-            start: dateTime,
-            end: dateTime.add(Duration(minutes: duration)),
-            isAllDay: false);
+        event.start = dateTime;
+        event.end = dateTime.add(Duration(minutes: duration));
+        event.isAllDay = false;
+        // Event event = item.data.copyWith(
+        //     start: dateTime,
+        //     end: dateTime.add(Duration(minutes: duration)),
+        //     isAllDay: false);
         wc.addEvent(event);
         border = Border.all(color: Colors.pink, width: 2.0);
       },

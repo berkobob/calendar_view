@@ -12,7 +12,7 @@ class WeeklyAllDayCell extends StatelessWidget {
       builder: (context, constraints) => MouseRegion(
         // onEnter: (_) => debugPrint('${allDayEvent.event?.id}'),
         cursor: SystemMouseCursors.grab,
-        child: Draggable<Event>(
+        child: Draggable<CVEvent>(
           data: allDayEvent.event,
           feedback: SizedBox(
               width: constraints.maxWidth,
@@ -61,7 +61,7 @@ class WeeklyAllDayEventCell extends StatelessWidget {
                 ? BorderSide.none
                 : const BorderSide(width: 0.5),
           ),
-          color: allDayEvent.event != null && allDayEvent.event!.colorId != null
+          color: allDayEvent.event != null
               ? Color(allDayEvent.event!.color)
               : null),
       child: Row(

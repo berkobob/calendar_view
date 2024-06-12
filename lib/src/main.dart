@@ -4,7 +4,7 @@ import 'package:watch_it/watch_it.dart';
 import 'consts/calendar_view.dart';
 import 'controllers/events_controller.dart';
 import 'controllers/weekly_controller.dart';
-import 'models/event.dart';
+import 'models/event_interface.dart';
 import 'weekly/weekly_view.dart';
 
 /// The CVCalendar class is the root widget that represents a calendar view.
@@ -16,7 +16,7 @@ import 'weekly/weekly_view.dart';
 class CVCalendar extends StatelessWidget {
   CVCalendar({
     this.view = CalendarView.weekly,
-    List<Event>? initEvents,
+    List<CVEvent>? initEvents,
     DateTime? initDate,
     bool showAppBar = false,
     bool showTimeLine = true,
@@ -25,7 +25,7 @@ class CVCalendar extends StatelessWidget {
   }) {
     if (!di.isRegistered<EventsController>()) {
       di.registerSingleton<EventsController>(EventsController(
-          initEvents: initEvents ?? <Event>[], initDate: initDate));
+          initEvents: initEvents ?? <CVEvent>[], initDate: initDate));
     }
     if (!di.isRegistered<WeeklyController>()) {
       di.registerLazySingleton(() => WeeklyController(

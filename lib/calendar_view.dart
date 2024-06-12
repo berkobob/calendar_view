@@ -21,22 +21,22 @@ library calendar_view;
 /// ```import 'package:calendar_view/calendar_view.dart';```
 ///
 /// and instantiate the main widget, CVCalendar, which is responsible
-/// for rendering the calendar view. There are not required parameters but
+/// for rendering the calendar view. There are no required parameters but
 /// consider passing a view parameter to specify the type of view to display.
 ///
 /// ```dart
-/// daily,
-/// weekly,
-/// fiveDays,
-/// monthly,
-/// yearly,
-/// agenda,
-/// schedule,
-/// ```
+/// CalendarView.daily,
+/// CalendarView.weekly,
+/// CalendarView.fiveDays,
+/// CalendarView.monthly,
+/// CalendarView.yearly,
+/// CalendarView.agenda,
+/// CalendarView.schedule,
+/// CalendarView.```
 
 export 'src/consts/constants.dart';
 export 'src/weekly/weekly_view.dart';
-export 'src/models/event.dart';
+export 'src/models/event_interface.dart';
 export 'src/models/events_messages.dart';
 export 'src/main.dart';
 export 'src/controllers/events_controller.dart';

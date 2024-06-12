@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/scheduled_event.dart';
+import '../../../models/event_interface.dart';
 
 class ScheduledEventWidget extends StatelessWidget {
   const ScheduledEventWidget({
@@ -12,7 +12,7 @@ class ScheduledEventWidget extends StatelessWidget {
 
   final double width;
   final double duration;
-  final ScheduledEvent event;
+  final CVEvent event;
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +24,14 @@ class ScheduledEventWidget extends StatelessWidget {
             ? const EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0)
             : const EdgeInsets.fromLTRB(3.0, 0.0, 3.0, 0.0),
         decoration: BoxDecoration(
-          color: event.event.colorId != null ? Color(event.event.color) : null,
+          color: Color(event.color),
           border: Border.all(color: Colors.grey[500]!),
           borderRadius: const BorderRadius.all(Radius.elliptical(5.0, 7.5)),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (event.event.summary.replaceAll('☐ ', '') != event.event.summary)
+            if (event.summary.replaceAll('☐ ', '') != event.summary)
               Transform.scale(
                   scale: 0.75,
                   child: Checkbox(
@@ -41,14 +41,14 @@ class ScheduledEventWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    event.event.summary.replaceAll('☐ ', ''),
+                    event.summary.replaceAll('☐ ', ''),
                     overflow: TextOverflow.fade,
                     softWrap: false,
                     textScaler: TextScaler.linear(factor(duration)),
                   ),
                   if (duration > 30.0)
                     Text(
-                      '${event.startTimeString} - ${event.endTimeString}',
+                      '$startTimeString - $endTimeString',
                       overflow: TextOverflow.fade,
                       softWrap: false,
                       textScaler: TextScaler.linear(factor(duration) * 0.8),
@@ -68,4 +68,10 @@ class ScheduledEventWidget extends StatelessWidget {
         <= 45 => 0.9,
         _ => 1.0
       };
+
+  String get startTimeString =>
+      '${event.start.hour.toString().padLeft(2, '0')}:${event.start.minute.toString().padLeft(2, '0')}';
+
+  String get endTimeString =>
+      '${event.end.hour.toString().padLeft(2, '0')}:${event.end.minute.toString().padLeft(2, '0')}';
 }

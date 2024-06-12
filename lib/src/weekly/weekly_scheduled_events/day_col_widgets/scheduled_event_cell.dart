@@ -8,7 +8,7 @@ import 'scheduled_event_widget.dart';
 class ScheduledEventCell extends StatefulWidget {
   const ScheduledEventCell({super.key, required this.event, required this.pos});
 
-  final ScheduledEvent event;
+  final CVEvent event;
   final (double width, double indent) pos;
 
   @override
@@ -20,13 +20,22 @@ class _ScheduledEventCellState extends State<ScheduledEventCell> {
 
   @override
   void initState() {
-    duration = widget.event.duration;
+    duration = widget.event.start
+        .difference(widget.event.end)
+        .inMinutes
+        .abs()
+        .toDouble();
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant ScheduledEventCell oldWidget) {
-    duration = widget.event.duration;
+    duration = widget.event.start
+        .difference(widget.event.end)
+        .inMinutes
+        .abs()
+        .toDouble();
+    ;
     super.didUpdateWidget(oldWidget);
   }
 
@@ -35,12 +44,12 @@ class _ScheduledEventCellState extends State<ScheduledEventCell> {
     final (width, indent) = widget.pos;
     duration = duration >= 5.0 ? duration : 5.0;
     return Positioned(
-      top: widget.event.startTimeInMinutes,
+      top: widget.event.start.hour * 60.0 + widget.event.start.minute,
       left: indent,
       child: Column(
         children: [
-          Draggable<Event>(
-            data: widget.event.event,
+          Draggable<CVEvent>(
+            data: widget.event,
             childWhenDragging: Opacity(
               opacity: 0.5,
               child: ScheduledEventWidget(
@@ -58,7 +67,7 @@ class _ScheduledEventCellState extends State<ScheduledEventCell> {
             ),
             child: MouseRegion(
               cursor: SystemMouseCursors.grab,
-              // onEnter: (event) => debugPrint('${widget.event.event}'),
+              // onEnter: (event) => debugPrint('${widget.event}'),
               child: ScheduledEventWidget(
                 width: width,
                 duration: duration,
@@ -73,7 +82,7 @@ class _ScheduledEventCellState extends State<ScheduledEventCell> {
             onDragEnd: (_) {
               di
                   .get<WeeklyController>()
-                  .setDuration(widget.event.event, duration: duration);
+                  .setDuration(widget.event, duration: duration);
               setState(() {});
             },
             onDragUpdate: (details) {

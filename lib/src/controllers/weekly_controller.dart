@@ -15,8 +15,7 @@ class WeeklyController with ChangeNotifier {
 
   final eventsController = di.get<EventsController>();
 
-  List<List<ScheduledEvent>> scheduledEvents =
-      List.generate(7, (_) => <ScheduledEvent>[]);
+  List<List<CVEvent>> scheduledEvents = List.generate(7, (_) => <CVEvent>[]);
 
   AllDayEvents allDayEvents = List.generate(7, (_) => <AllDayEvent>[]);
 
@@ -125,7 +124,7 @@ class WeeklyController with ChangeNotifier {
             .scheduledEventsOn(monday.add(Duration(days: day)))
             //         .where((event) =>
             //             event.start.isSameDate(monday.add(Duration(days: day))))
-            .map((event) => ScheduledEvent(event))
+            // .map((event) => ScheduledEvent(event))
             .toList()
           ..sort());
     notifyListeners();
@@ -137,17 +136,17 @@ class WeeklyController with ChangeNotifier {
     notifyListeners();
   }
 
-  void addEvent(Event event) {
-    event.id != null
+  void addEvent(CVEvent event) {
+    event.source != 'dummy task'
         ? snackbarMessage = '${event.summary} moved to ${event.start}'
-        : snackbarMessage = '${event.summary} added to ${event.calendar}';
+        : snackbarMessage = '${event.summary} added to ${event.source}';
 
     print(eventsController.remove(event));
     EventsController.pubEventChanges(event);
     event.isAllDay ? _getAllDayEvents() : _getScheduledEvents();
   }
 
-  void setDuration(Event event, {required double duration}) {
+  void setDuration(CVEvent event, {required double duration}) {
     final mins = (duration / 15).round() * 15;
     event.end = event.start.add(Duration(minutes: mins));
     eventsController.remove(event);
