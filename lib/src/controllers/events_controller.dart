@@ -17,7 +17,7 @@ class EventsController {
 
   // When exiting [_events] change, notify listeners
   static final StreamController<CVEvent> _pubEventChange = StreamController();
-  static get eventChanges => _pubEventChange.stream;
+  static get cvEventChanges => _pubEventChange.stream;
   static get pubEventChanges => _pubEventChange.add;
 
   final StreamController<dynamic> _updateStream =
