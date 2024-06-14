@@ -15,12 +15,9 @@ class CalendarEvent implements CVEvent {
   DateTime start;
   @override
   String? location;
-  @override
   String? colorId;
   @override
   DateTime end;
-  @override
-  String calendar;
 
   CalendarEvent({
     required this.source,
@@ -32,7 +29,6 @@ class CalendarEvent implements CVEvent {
     this.location,
     this.colorId,
     required this.end,
-    required this.calendar,
   });
 
   // Event copyWith({
@@ -76,11 +72,10 @@ class CalendarEvent implements CVEvent {
           colorId: json['colorId']?.replaceFirst('#', 'ff'),
           end: DateTime.parse(json['end']['date'] ?? json['end']['dateTime'])
               .toLocal(),
-          calendar: 'test@testCalendar.com',
         );
 
   @override
-  int? get color => int.tryParse(colorId ?? '0', radix: 16);
+  int get color => int.parse(colorId ?? '0', radix: 16);
 
   @override
   String toString() => '$id\t$summary on $start till $end';

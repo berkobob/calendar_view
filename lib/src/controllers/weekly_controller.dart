@@ -11,7 +11,6 @@ class WeeklyController with ChangeNotifier {
   final bool showAppBar;
   final bool showTimeLine;
   final bool autoScroll;
-  String? snackbarMessage;
 
   final eventsController = di.get<EventsController>();
 
@@ -137,11 +136,7 @@ class WeeklyController with ChangeNotifier {
   }
 
   void addEvent(CVEvent event) {
-    event.source != 'dummy task'
-        ? snackbarMessage = '${event.summary} moved to ${event.start}'
-        : snackbarMessage = '${event.summary} added to ${event.source}';
-
-    print(eventsController.remove(event));
+    eventsController.remove(event);
     EventsController.pubEventChanges(event);
     event.isAllDay ? _getAllDayEvents() : _getScheduledEvents();
   }
@@ -151,7 +146,5 @@ class WeeklyController with ChangeNotifier {
     event.end = event.start.add(Duration(minutes: mins));
     eventsController.remove(event);
     EventsController.pubEventChanges(event);
-    snackbarMessage =
-        '${event.summary} set to ${duration.toInt()} minutes ending at ${event.end}';
   }
 }

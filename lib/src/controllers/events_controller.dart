@@ -8,6 +8,22 @@ class EventsController {
   final List<CVEvent> _events;
   late final DateTime initDate;
 
+  /*
+
+    registerChangeNotifierHandler(
+        handler: (context, WeeklyController value, cancel) {
+      if (value.snackbarMessage != null) {
+        SnackBar snackbar = SnackBar(
+          content: Text(value.snackbarMessage!),
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(snackbar);
+        value.snackbarMessage = null;
+      }
+    });
+
+  */
+
   static final StreamController<Message> _eventMessages = StreamController();
   // Receive new [Event]s on this stream
   static get msg => _eventMessages.add;

@@ -15,18 +15,6 @@ class WeeklyView extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final wc = di.get<WeeklyController>();
 
-    registerChangeNotifierHandler(
-        handler: (context, WeeklyController value, cancel) {
-      if (value.snackbarMessage != null) {
-        SnackBar snackbar = SnackBar(
-          content: Text(value.snackbarMessage!),
-        );
-
-        ScaffoldMessenger.of(context).showSnackBar(snackbar);
-        value.snackbarMessage = null;
-      }
-    });
-
     return Scaffold(
       appBar: wc.showAppBar ? const WeeklyAppBar() : null,
       body: PageView.builder(

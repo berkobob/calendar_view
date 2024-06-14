@@ -35,7 +35,7 @@ class _ScheduledEventCellState extends State<ScheduledEventCell> {
         .inMinutes
         .abs()
         .toDouble();
-    ;
+
     super.didUpdateWidget(oldWidget);
   }
 

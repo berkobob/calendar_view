@@ -43,10 +43,6 @@ class WeeklyAllDayDropTarget extends StatelessWidget {
                 event.start = wc.monday.add(Duration(days: day));
                 event.end = wc.monday.add(Duration(days: day + 1));
                 event.isAllDay = true;
-                // final event = item.data.copyWith(
-                //     start: wc.monday.add(Duration(days: day)),
-                //     end: wc.monday.add(Duration(days: day + 1)),
-                //     isAllDay: true);
                 wc.addEvent(event);
                 border[day] = null;
               }),

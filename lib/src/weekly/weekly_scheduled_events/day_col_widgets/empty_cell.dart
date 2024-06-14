@@ -43,10 +43,6 @@ class EmptyCell extends StatelessWidget {
         event.start = dateTime;
         event.end = dateTime.add(Duration(minutes: duration));
         event.isAllDay = false;
-        // Event event = item.data.copyWith(
-        //     start: dateTime,
-        //     end: dateTime.add(Duration(minutes: duration)),
-        //     isAllDay: false);
         wc.addEvent(event);
         border = Border.all(color: Colors.pink, width: 2.0);
       },

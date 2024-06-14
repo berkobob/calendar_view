@@ -20,7 +20,7 @@ List<CVEvent> allEvents = [];
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  EventsController.eventChanges.listen((event) {
+  EventsController.cvEventChanges.listen((event) {
     event.id =
         Object.hashAll([event.start, event.end, event.summary]).toString();
     EventsController.msg(AddEvent(event));
@@ -98,7 +98,6 @@ class DraggableTask extends StatelessWidget {
     final data = CalendarEvent(
       source: 'dummy task',
       id: '${task.hashCode}',
-      calendar: '',
       start: DateTime.now(),
       end: DateTime.now(),
       summary: task,
