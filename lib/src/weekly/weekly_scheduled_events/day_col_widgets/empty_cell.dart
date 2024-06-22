@@ -38,7 +38,7 @@ class EmptyCell extends StatelessWidget {
             ? item.data.end.difference(item.data.start).inMinutes.abs()
             : start == 0
                 ? 60
-                : start;
+                : 60 - start;
 
         event.start = dateTime;
         event.end = dateTime.add(Duration(minutes: duration));
