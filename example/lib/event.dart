@@ -31,33 +31,6 @@ class CalendarEvent implements CVEvent {
     required this.end,
   });
 
-  // Event copyWith({
-  //   String? source,
-  //   String? id,
-  //   String? summary,
-  //   String? description,
-  //   bool? isAllDay,
-  //   DateTime? start,
-  //   String? location,
-  //   String? colorId,
-  //   DateTime? end,
-  //   String? calendar,
-  //   bool? recurring,
-  // }) {
-  //   return CalendarEvent(
-  //     source: source ?? this.source,
-  //     id: id ?? this.id,
-  //     summary: summary ?? this.summary,
-  //     description: description ?? this.description,
-  //     isAllDay: isAllDay ?? this.isAllDay,
-  //     start: start ?? this.start,
-  //     location: location ?? this.location,
-  //     colorId: colorId ?? this.colorId,
-  //     end: end ?? this.end,
-  //     calendar: calendar ?? this.calendar,
-  //   );
-  // }
-
   CalendarEvent.fromJson(Map<String, dynamic> json)
       : this(
           source: 'dummy calendar',
