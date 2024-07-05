@@ -94,6 +94,7 @@ class DraggableTask extends StatelessWidget {
   Widget build(BuildContext context) {
     final Widget child = ListTile(title: Text(task));
     final data = CVEvent(
+      source: 'Example item',
       start: DateTime.now(),
       end: DateTime.now(),
       summary: task,
@@ -123,6 +124,7 @@ Future<List<CVEvent>> loadData() async {
   final confirmed = json['items'].where((x) => x['status'] == 'confirmed');
   final events = confirmed
       .map<CVEvent>((json) => CVEvent(
+            source: 'Example app',
             summary: json['summary'],
             description: json['description'],
             isAllDay: json['start']['date'] != null,

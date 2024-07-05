@@ -1,4 +1,5 @@
 class CVEvent implements Comparable {
+  final dynamic source;
   final String summary;
   final String? description;
   late bool isAllDay;
@@ -10,6 +11,7 @@ class CVEvent implements Comparable {
   int get color => int.parse(colorId ?? 'ffffffff', radix: 16);
 
   CVEvent({
+    required this.source,
     required this.summary,
     this.description,
     DateTime? start,
