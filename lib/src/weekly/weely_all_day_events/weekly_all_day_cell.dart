@@ -10,7 +10,6 @@ class WeeklyAllDayCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) => MouseRegion(
-        // onEnter: (_) => debugPrint('${allDayEvent.event?.id}'),
         cursor: SystemMouseCursors.grab,
         child: Draggable<CVEvent>(
           data: allDayEvent.event,

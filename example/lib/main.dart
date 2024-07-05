@@ -5,8 +5,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'event.dart';
-
 class AppScrollBehavior extends MaterialScrollBehavior {
   @override
   Set<PointerDeviceKind> get dragDevices => {
@@ -21,8 +19,8 @@ List<CVEvent> allEvents = [];
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   EventsController.cvEventChanges.listen((event) {
-    event.id =
-        Object.hashAll([event.start, event.end, event.summary]).toString();
+    // event.id =
+    //     Object.hashAll([event.start, event.end, event.summary]).toString();
     EventsController.msg(AddEvent(event));
   });
 
@@ -95,9 +93,7 @@ class DraggableTask extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget child = ListTile(title: Text(task));
-    final data = CalendarEvent(
-      source: 'dummy task',
-      id: '${task.hashCode}',
+    final data = CVEvent(
       start: DateTime.now(),
       end: DateTime.now(),
       summary: task,
@@ -126,7 +122,18 @@ Future<List<CVEvent>> loadData() async {
   final json = jsonDecode(data);
   final confirmed = json['items'].where((x) => x['status'] == 'confirmed');
   final events = confirmed
-      .map<CVEvent>((json) => CalendarEvent.fromJson(json))
+      .map<CVEvent>((json) => CVEvent(
+            summary: json['summary'],
+            description: json['description'],
+            isAllDay: json['start']['date'] != null,
+            start: DateTime.parse(
+                    json['start']['date'] ?? json['start']['dateTime'])
+                .toLocal(),
+            location: json['location'],
+            colorId: json['colorId']?.replaceFirst('#', 'ff'),
+            end: DateTime.parse(json['end']['date'] ?? json['end']['dateTime'])
+                .toLocal(),
+          ))
       .toList()
     ..sort();
   return events;

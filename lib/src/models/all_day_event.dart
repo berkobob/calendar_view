@@ -1,4 +1,4 @@
-import 'event_interface.dart';
+import 'event.dart';
 
 class AllDayEvent implements Comparable {
   AllDayEvent([this.event])

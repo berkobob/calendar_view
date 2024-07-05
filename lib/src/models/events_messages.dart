@@ -1,4 +1,4 @@
-import 'event_interface.dart';
+import 'event.dart';
 
 sealed class Message {
   const Message();

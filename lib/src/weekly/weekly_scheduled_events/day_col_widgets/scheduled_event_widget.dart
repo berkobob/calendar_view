@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/event_interface.dart';
+import '../../../models/event.dart';
 
 class ScheduledEventWidget extends StatelessWidget {
   const ScheduledEventWidget({

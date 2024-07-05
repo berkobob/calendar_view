@@ -4,7 +4,7 @@ import 'package:watch_it/watch_it.dart';
 import 'consts/calendar_view.dart';
 import 'controllers/events_controller.dart';
 import 'controllers/weekly_controller.dart';
-import 'models/event_interface.dart';
+import 'models/event.dart';
 import 'weekly/weekly_view.dart';
 
 /// The CVCalendar class is the root widget that represents a calendar view.
