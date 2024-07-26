@@ -63,8 +63,9 @@ class ScheduledEventWidget extends StatelessWidget {
   }
 
   double factor(double duration) => switch (duration) {
+        <= 10 => 0.45,
         <= 15 => 0.674,
-        <= 30 => 1.0,
+        <= 30 => 0.75,
         <= 45 => 0.9,
         _ => 1.0
       };
