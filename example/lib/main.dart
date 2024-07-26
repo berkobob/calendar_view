@@ -95,8 +95,8 @@ class DraggableTask extends StatelessWidget {
     final Widget child = ListTile(title: Text(task));
     final data = CVEvent(
       source: 'Example item',
-      start: DateTime.now(),
-      end: DateTime.now(),
+      // start: DateTime.now(),
+      end: null, //DateTime.now(),
       summary: task,
       isAllDay: true,
     );

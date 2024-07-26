@@ -21,8 +21,8 @@ class CVEvent implements Comparable {
     this.colorId,
   }) {
     if (isAllDay != null) this.isAllDay = isAllDay;
-    if (start != null) this.start = start;
-    if (end != null) this.end = end;
+    this.start = start ?? DateTime.now();
+    this.end = end ?? this.start.add(const Duration(hours: 1));
   }
 
   @override
